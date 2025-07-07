@@ -544,7 +544,7 @@ def process_single_prediction(args):
             'individual_predictions': predictions,
             'audio_duration': features.get('audio_duration', 0),
             'sample_rate': features.get('sample_rate', 0),
-            'file_size_mb': audio_file.stat().st_size
+            'file_size_mb': audio_file.stat().st_size / (1024 * 1024)
         }
         
         return result
