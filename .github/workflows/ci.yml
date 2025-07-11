@@ -100,8 +100,12 @@ jobs:
 
     - name: Run safety check
       run: |
-        safety scan --output screen --output-format json --output-file safety-report.json || true
-        safety scan --output screen
+        if [ -z "${{ secrets.SAFETY_API_KEY }}" ]; then
+          echo "SAFETY_API_KEY is not set. Skipping safety scan."
+        else
+          safety scan --api-key ${{ secrets.SAFETY_API_KEY }} --output screen --output-format json --output-file safety-report.json || true
+          safety scan --api-key ${{ secrets.SAFETY_API_KEY }} --output screen
+        fi
 
   build:
     needs: [test, security]
