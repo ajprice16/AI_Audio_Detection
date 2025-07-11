@@ -151,7 +151,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: dist
+        name: build-dist
         path: dist/
 
   performance:
@@ -180,6 +180,7 @@ jobs:
         python tests/benchmark.py
 
     - name: Upload benchmark results
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: benchmark-results
@@ -201,5 +202,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: dist
+        name: performance-dist
         path: dist/
