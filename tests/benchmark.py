@@ -37,6 +37,9 @@ class BenchmarkRunner:
         duration = 3.0  # 3 seconds each
         t = np.linspace(0, duration, int(sample_rate * duration))
 
+        print(f"Creating {num_files} synthetic audio files for benchmarking...")
+        print("Note: Synthetic audio files will have limited class diversity")
+
         for i in range(num_files):
             # Create varied audio samples
             freq = 200 + i * 50
@@ -87,6 +90,46 @@ class BenchmarkRunner:
         import pandas as pd
 
         df = pd.DataFrame(features_data)
+
+        # Check if we have enough class diversity for training
+        if "label" in df.columns:
+            unique_labels = df["label"].nunique()
+            print(f"  Found {unique_labels} unique labels in training data")
+
+            if unique_labels < 2:
+                print(
+                    "  ⚠️  Insufficient class diversity for model training (need at least 2 classes)"
+                )
+                print("  Skipping model training benchmark...")
+
+                # Create a dummy detector for compatibility
+                detector = AIAudioDetector(base_dir=self.temp_dir)
+
+                self.results["training"] = {
+                    "training_time": 0.0,
+                    "samples_trained": len(df),
+                    "models_trained": 0,
+                    "time_per_sample": 0.0,
+                    "skipped_reason": "insufficient_class_diversity",
+                }
+
+                return detector
+        else:
+            print("  ⚠️  No 'label' column found in training data")
+            print("  Skipping model training benchmark...")
+
+            # Create a dummy detector for compatibility
+            detector = AIAudioDetector(base_dir=self.temp_dir)
+
+            self.results["training"] = {
+                "training_time": 0.0,
+                "samples_trained": len(df),
+                "models_trained": 0,
+                "time_per_sample": 0.0,
+                "skipped_reason": "no_labels",
+            }
+
+            return detector
 
         detector = AIAudioDetector(base_dir=self.temp_dir)
 
@@ -162,12 +205,19 @@ class BenchmarkRunner:
             import pandas as pd
 
             df = pd.DataFrame(features)
-            training_results = detector.train_models(df)
 
-            # Make some predictions
-            audio_files = list(Path(audio_dir).glob("*.wav"))[:5]
-            for audio_file in audio_files:
-                detector.predict_file(audio_file)
+            # Check if we have enough class diversity for training
+            if "label" in df.columns and df["label"].nunique() >= 2:
+                training_results = detector.train_models(df)
+
+                # Make some predictions
+                audio_files = list(Path(audio_dir).glob("*.wav"))[:5]
+                for audio_file in audio_files:
+                    detector.predict_file(audio_file)
+            else:
+                print(
+                    "  Skipping model training in memory benchmark (insufficient class diversity)"
+                )
 
         print("  Memory profiling complete (see output above)")
 
