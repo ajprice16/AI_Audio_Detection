@@ -58,7 +58,7 @@ type-check:
 
 security:
 	$(PYTHON) -m bandit -r ai_audio_detector.py example_usage.py --skip B110,B112,B311 --severity-level medium
-	$(PYTHON) -m safety check
+	$(PYTHON) -m safety scan
 
 # Pre-commit
 pre-commit:

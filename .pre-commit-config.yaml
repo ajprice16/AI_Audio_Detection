@@ -38,7 +38,7 @@ repos:
     rev: 1.7.5
     hooks:
       - id: bandit
-        args: [-r, ai_audio_detector.py, example_usage.py, --skip, B110,B112,B311,B404,B602, --severity-level, medium]
+        args: [-r, ., --exclude, ./tests/, --skip, B110,B112,B311, --severity-level, medium]
 
   - repo: local
     hooks:
@@ -55,6 +55,6 @@ repos:
         name: safety
         entry: /Users/ajpri/Summer/AI_Audio/.venv/bin/python
         language: system
-        args: [-m, safety, check, --json]
+        args: [-m, safety, scan, --output, screen]
         pass_filenames: false
         always_run: true
