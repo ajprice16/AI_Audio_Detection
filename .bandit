@@ -1,2 +1,3 @@
-skips: ['B110', 'B112', 'B311', 'B404', 'B602']
-exclude_dirs: ['tests', '.venv', 'venv', 'env', '.env', '__pycache__', '.pytest_cache', '.mypy_cache']
+[bandit]
+skips = B110,B112,B311,B404,B602
+exclude_dirs = tests,.venv,venv,env,.env,__pycache__,.pytest_cache,.mypy_cache
