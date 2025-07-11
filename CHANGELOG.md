@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 - **Audio Format Support**: WAV, MP3, FLAC, OGG, M4A, AAC
-- **Feature Extraction**: 
+- **Feature Extraction**:
   - Benford's Law statistics (Chi-square, KS test, MAD, entropy)
   - Spectral features (centroid, bandwidth, rolloff, MFCCs, chroma, contrast)
   - Temporal features (RMS, tempo, flatness, dynamic range)

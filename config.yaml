@@ -8,7 +8,7 @@ models:
       loss: 'log_loss'
     passive_aggressive:
       random_state: 42
-  
+
   batch:
     random_forest:
       n_estimators: 200
@@ -22,7 +22,7 @@ models:
 audio:
   supported_formats: ['.wav', '.mp3', '.flac', '.ogg', '.m4a', '.aac']
   default_sample_rate: null  # Use original sample rate
-  
+
 # Feature extraction settings
 features:
   benford:
@@ -30,19 +30,19 @@ features:
   spectral:
     n_mfcc: 13
     n_mels: 128
-  
+
 # Processing settings
 processing:
   max_workers: 4
   batch_threshold: 3  # Use multiprocessing for batches larger than this
-  
+
 # Output settings
 output:
   models_dir: 'models'
   results_dir: 'results'
   spectrograms_dir: 'spectrograms'
   comparisons_dir: 'spectrogram_comparisons'
-  
+
 # Visualization settings
 visualization:
   figsize: [12, 8]

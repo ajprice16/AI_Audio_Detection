@@ -2245,7 +2245,7 @@ def run_interactive_mode(detector):
                 print("No training history found.")
             else:
                 for i, session in enumerate(detector.training_history):
-                    print(f"\nSession {i+1}: {session['timestamp'][:19]}")
+                    print(f"\nSession {i+1}: {session['timestamp'][: 19]}")
                     print(f"  Type: {session.get('training_type', 'unknown')}")
                     print(
                         f"  Samples: {session['total_samples']} (AI: {session['ai_samples']}, Human: {session['human_samples']})"

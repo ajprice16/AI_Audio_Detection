@@ -24,6 +24,7 @@ exclude =
 # Error codes to ignore
 ignore =
     E203,
+    E231,
     E501,
     W503,
     F401,

@@ -43,7 +43,7 @@ class BenchmarkRunner:
             audio = np.sin(2 * np.pi * freq * t) + 0.3 * np.random.normal(0, 1, len(t))
             audio = audio * 0.7
 
-            sf.write(audio_dir / f"test_file_{i:03d}.wav", audio, sample_rate)
+            sf.write(audio_dir / f"test_file_{i: 03d}.wav", audio, sample_rate)
 
         return audio_dir
 

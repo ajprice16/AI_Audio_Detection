@@ -38,7 +38,7 @@ repos:
     rev: 1.7.5
     hooks:
       - id: bandit
-        args: [-r, ., --exclude, ./tests/, --skip, B110,B112,B311, --severity-level, medium]
+        args: [--configfile, .bandit]
 
   - repo: local
     hooks:

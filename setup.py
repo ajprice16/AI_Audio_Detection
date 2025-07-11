@@ -61,13 +61,13 @@ setup(
     install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "ai-audio-detector=ai_audio_detector:main",
+            "ai-audio-detector=ai_audio_detector: main",
         ],
     },
     keywords="ai detection audio machine-learning benford-law audio-analysis",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/ai-audio-detector/issues",
-        "Source": "https://github.com/yourusername/ai-audio-detector",
-        "Documentation": "https://github.com/yourusername/ai-audio-detector#readme",
+        "Bug Reports": "https: //github.com/yourusername/ai-audio-detector/issues",
+        "Source": "https: //github.com/yourusername/ai-audio-detector",
+        "Documentation": "https: //github.com/yourusername/ai-audio-detector#readme",
     },
 )
