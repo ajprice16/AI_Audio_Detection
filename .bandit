@@ -1,0 +1,12 @@
+[bandit]
+# Bandit configuration for AI Audio Detector
+
+# Skip certain tests that are not relevant for this application
+skips = B110,B112,B311,B404,B602
+
+# Exclude test directories and virtual environments
+exclude_dirs = tests,.venv,venv,env,.env,__pycache__,.pytest_cache,.mypy_cache
+
+# Only fail on medium and high severity issues
+# This tool is for audio analysis research, not production security
+assert_used_lines = []

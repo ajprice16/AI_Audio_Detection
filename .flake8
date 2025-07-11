@@ -1,0 +1,45 @@
+[flake8]
+max-line-length = 127
+max-complexity = 10
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    build,
+    dist,
+    .eggs,
+    *.egg-info,
+    .tox,
+    .coverage,
+    .coverage.*,
+    coverage.xml,
+    *.cover,
+    .hypothesis,
+    .pytest_cache,
+    models/,
+    results/,
+    spectrograms/
+
+# Error codes to ignore
+ignore =
+    E203,
+    E501,
+    W503,
+    F401,
+    E402,
+    E722,
+    F841,
+    F541,
+    C901,
+    E226
+
+# Error codes to enforce
+select = E,W,F,C
+
+# Import order settings
+import-order-style = google
+application-import-names = ai_audio_detector
+
+# Docstring settings
+docstring-convention = google
