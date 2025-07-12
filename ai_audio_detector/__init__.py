@@ -4,6 +4,8 @@ Trains Random Forest, Gradient Boosting, SGD, and Passive Aggressive classifiers
 Returns highest confidence prediction with detailed feature analysis.
 """
 
+__version__ = "1.0.4"
+
 import pandas as pd
 import numpy as np
 from pathlib import Path
