@@ -85,7 +85,9 @@ def create_release(version: str, push: bool = False) -> None:
 
     # Run tests
     print("\n🧪 Running tests...")
-    if not run_command("python -m pytest tests/ -v"):
+    if not run_command(
+        "/Users/ajpri/Summer/AI_Audio/.venv/bin/python -m pytest tests/ -v"
+    ):
         print("❌ Tests failed. Please fix before releasing.")
         sys.exit(1)
     print("✅ All tests passed")
@@ -101,14 +103,16 @@ def create_release(version: str, push: bool = False) -> None:
 
     # Build package
     print("\n📦 Building package...")
-    if not run_command("python -m build"):
+    if not run_command("/Users/ajpri/Summer/AI_Audio/.venv/bin/python -m build"):
         print("❌ Build failed")
         sys.exit(1)
     print("✅ Package built successfully")
 
     # Check package
     print("\n🔍 Checking package...")
-    if not run_command("twine check dist/*"):
+    if not run_command(
+        "/Users/ajpri/Summer/AI_Audio/.venv/bin/python -m twine check dist/*"
+    ):
         print("❌ Package check failed")
         sys.exit(1)
     print("✅ Package check passed")

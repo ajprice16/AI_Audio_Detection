@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 """
-Setup script for AI Audio Detector
+Setup ssetup(
+    name="ai-audio-detector",
+    version="1.0.2",
+    author="Alex Price",
+    author_email="ajprice@mail.wlu.edu",
+    description="Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/ajprice16/AI_Audio_Detection",
+    packages=find_packages(),
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Operating System :: OS Independent",io Detector
 """
 
 from setuptools import setup, find_packages
@@ -34,40 +48,40 @@ else:
 
 setup(
     name="ai-audio-detector",
-    version="1.0.0",
+    version="1.0.2",
     author="Alex Price",
     author_email="ajprice@mail.wli.edu",
     description="Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/ai-audio-detector",
+    url="https://github.com/ajprice16/AI_Audio_Detection",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Multimedia :: Sound/Audio :: Analysis",
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "ai-audio-detector=ai_audio_detector: main",
+            "ai-audio-detector=ai_audio_detector:main",
         ],
     },
     keywords="ai detection audio machine-learning benford-law audio-analysis",
     project_urls={
-        "Bug Reports": "https: //github.com/yourusername/ai-audio-detector/issues",
-        "Source": "https: //github.com/yourusername/ai-audio-detector",
-        "Documentation": "https: //github.com/yourusername/ai-audio-detector#readme",
+        "Bug Reports": "https://github.com/ajprice16/AI_Audio_Detection/issues",
+        "Source": "https://github.com/ajprice16/AI_Audio_Detection",
+        "Documentation": "https://github.com/ajprice16/AI_Audio_Detection#readme",
     },
 )
