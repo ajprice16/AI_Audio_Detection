@@ -58,7 +58,8 @@ type-check:
 
 security:
 	$(PYTHON) -m bandit -r ai_audio_detector/ example_usage.py --skip B110,B112,B311 --severity-level medium
-	$(PYTHON) -m safety scan
+	@echo "⚠️  Safety scan skipped (requires authentication)"
+	@echo "To run safety scan, install and authenticate: pip install safety && safety auth login"
 
 # Pre-commit
 pre-commit:
