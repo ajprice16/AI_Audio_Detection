@@ -3,6 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ main, develop ]
+    tags: [ 'v*' ]  # Trigger on version tags
   pull_request:
     branches: [ main, develop ]
   workflow_dispatch:
@@ -204,3 +205,115 @@ jobs:
       with:
         name: performance-dist
         path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: [test, security, build]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: pypi
+      url: https://pypi.org/p/ai-audio-detector
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+
+    - name: Extract version from tag
+      id: version
+      run: |
+        echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Verify version matches setup.py
+      run: |
+        SETUP_VERSION=$(python setup.py --version)
+        TAG_VERSION="${{ steps.version.outputs.version }}"
+        echo "Setup.py version: $SETUP_VERSION"
+        echo "Tag version: $TAG_VERSION"
+        if [ "$SETUP_VERSION" != "$TAG_VERSION" ]; then
+          echo "❌ Version mismatch: setup.py has $SETUP_VERSION but tag is $TAG_VERSION"
+          exit 1
+        fi
+        echo "✅ Version verification passed"
+
+    - name: Build package
+      run: |
+        python -m build
+
+    - name: Check package
+      run: |
+        twine check dist/*
+
+    - name: Publish to Test PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+        skip-existing: true
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+
+    - name: Test installation from Test PyPI
+      run: |
+        sleep 30  # Wait for package to be available
+        pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ ai-audio-detector==${{ steps.version.outputs.version }}
+        python -c "import ai_audio_detector; print('✅ Package installed successfully from Test PyPI')"
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        skip-existing: true
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.version.outputs.tag }}
+        release_name: Release ${{ steps.version.outputs.tag }}
+        body: |
+          ## AI Audio Detector ${{ steps.version.outputs.version }}
+
+          🎉 **New Release Available on PyPI!**
+
+          ### Installation
+          ```bash
+          pip install ai-audio-detector==${{ steps.version.outputs.version }}
+          ```
+
+          ### What's New
+          - See [CHANGELOG.md](https://github.com/ajprice16/AI_Audio_Detection/blob/main/CHANGELOG.md) for details
+
+          ### Package Information
+          - **PyPI**: https://pypi.org/project/ai-audio-detector/${{ steps.version.outputs.version }}/
+          - **Test PyPI**: https://test.pypi.org/project/ai-audio-detector/${{ steps.version.outputs.version }}/
+
+          ### Verification
+          All tests, security scans, and quality checks have passed ✅
+        draft: false
+        prerelease: false
+
+    - name: Upload release artifacts
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/
+        asset_name: ai-audio-detector-${{ steps.version.outputs.version }}-dist.zip
+        asset_content_type: application/zip

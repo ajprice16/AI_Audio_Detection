@@ -1,0 +1,55 @@
+# Include essential files
+include README.md
+include LICENSE
+include CHANGELOG.md
+include CONTRIBUTING.md
+include requirements.txt
+include requirements-dev.txt
+include config.yaml
+
+# Include package data
+recursive-include ai_audio_detector *.py
+recursive-include ai_audio_detector *.yaml
+recursive-include ai_audio_detector *.yml
+recursive-include ai_audio_detector *.json
+
+# Include tests
+recursive-include tests *.py
+
+# Include documentation
+recursive-include docs *.md
+recursive-include docs *.rst
+recursive-include docs *.txt
+
+# Exclude unnecessary files
+exclude .gitignore
+exclude .pre-commit-config.yaml
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * *.so
+recursive-exclude * .DS_Store
+recursive-exclude * .coverage
+recursive-exclude * *.log
+
+# Exclude build artifacts
+exclude .github/
+recursive-exclude .github *
+exclude .pytest_cache/
+recursive-exclude .pytest_cache *
+exclude .mypy_cache/
+recursive-exclude .mypy_cache *
+exclude build/
+recursive-exclude build *
+exclude dist/
+recursive-exclude dist *
+exclude *.egg-info/
+recursive-exclude *.egg-info *
+
+# Exclude temporary and cache files
+exclude .tox/
+recursive-exclude .tox *
+exclude .coverage
+exclude htmlcov/
+recursive-exclude htmlcov *
+exclude .cache/
+recursive-exclude .cache *

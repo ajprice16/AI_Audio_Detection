@@ -137,6 +137,27 @@ spectrogram_comparisons/
 *.m4a
 *.aac
 
+# PyPI publishing artifacts
+twine.ini
+.twinerc
+
+# Release artifacts
+release-artifacts/
+dist-backup/
+
+# Security reports
+bandit-report.json
+safety-report.json
+*.sarif
+
+# Performance benchmarks
+benchmark-results.json
+performance-*.json
+
+# Documentation builds
+docs/_build/
+docs/build/
+
 # IDE
 .vscode/
 .idea/
@@ -150,3 +171,12 @@ spectrogram_comparisons/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+.temporary/
+
+# Local configuration overrides
+config.local.yaml
+.env.local

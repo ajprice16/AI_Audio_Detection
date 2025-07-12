@@ -23,15 +23,35 @@ A machine learning system for detecting AI-generated audio using Benford's Law a
 
 ## Installation
 
+### Option 1: Install from PyPI (Recommended)
+
+```bash
+pip install ai-audio-detector
+```
+
+### Option 2: Install from Source
+
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/ai-audio-detector.git
-cd ai-audio-detector
+git clone https://github.com/ajprice16/AI_Audio_Detection.git
+cd AI_Audio_Detection
 ```
 
 2. Install dependencies:
 ```bash
 pip install -r requirements.txt
+```
+
+### System Dependencies
+
+On Ubuntu/Debian:
+```bash
+sudo apt-get install libsndfile1 ffmpeg
+```
+
+On macOS:
+```bash
+brew install libsndfile ffmpeg
 ```
 
 ## Quick Start
@@ -43,24 +63,69 @@ pip install -r requirements.txt
    - `ai_audio/` - AI-generated audio files
 
 2. **Run the detector**:
+
+**If installed from PyPI:**
 ```bash
-python ai_audio_detector.py
+ai-audio-detector --interactive
+# or
+ai-audio-detector --predict-file path/to/audio.wav
+```
+
+**If running from source:**
+```bash
+python ai_audio_detector.py --interactive
+# or
+python ai_audio_detector.py --predict-file path/to/audio.wav
 ```
 
 3. **Choose option 1** to train new models and follow the prompts.
 
+### Command Line Usage
+
+**Train models:**
+```bash
+ai-audio-detector --train --human-dir path/to/human/audio --ai-dir path/to/ai/audio
+```
+
+**Predict single file:**
+```bash
+ai-audio-detector --predict-file path/to/audio.wav
+```
+
+**Predict batch:**
+```bash
+ai-audio-detector --predict-batch path/to/audio/directory
+```
+
+**Interactive mode:**
+```bash
+ai-audio-detector --interactive
+```
+
 ### Predicting Single Files
 
+**Interactive mode:**
 ```bash
-python ai_audio_detector.py
+ai-audio-detector --interactive
 # Choose option 2 and enter the path to your audio file
+```
+
+**Direct command:**
+```bash
+ai-audio-detector --predict-file path/to/audio.wav
 ```
 
 ### Batch Prediction
 
+**Interactive mode:**
 ```bash
-python ai_audio_detector.py
+ai-audio-detector --interactive
 # Choose option 3 and enter the directory path
+```
+
+**Direct command:**
+```bash
+ai-audio-detector --predict-batch path/to/audio/directory
 ```
 
 ## Advanced Usage
