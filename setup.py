@@ -2,7 +2,7 @@
 """
 Setup ssetup(
     name="ai-audio-detector",
-    version="1.0.3",
+    version="1.0.4",
     author="Alex Price",
     author_email="ajprice@mail.wlu.edu",
     description="Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
@@ -48,7 +48,7 @@ else:
 
 setup(
     name="ai-audio-detector",
-    version="1.0.3",
+    version="1.0.4",
     author="Alex Price",
     author_email="ajprice@mail.wli.edu",
     description="Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
