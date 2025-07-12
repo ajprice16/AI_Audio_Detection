@@ -101,6 +101,13 @@ def create_release(version: str, push: bool = False) -> None:
         sys.exit(1)
     print("✅ Linting passed")
 
+    # Run type checking
+    print("\n🔍 Running type checking...")
+    if not run_command("mypy ai_audio_detector/ --ignore-missing-imports"):
+        print("❌ Type checking failed. Please fix before releasing.")
+        sys.exit(1)
+    print("✅ Type checking passed")
+
     # Build package
     print("\n📦 Building package...")
     if not run_command("/Users/ajpri/Summer/AI_Audio/.venv/bin/python -m build"):

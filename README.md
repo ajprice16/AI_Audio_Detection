@@ -73,9 +73,9 @@ ai-audio-detector --predict-file path/to/audio.wav
 
 **If running from source:**
 ```bash
-python ai_audio_detector.py --interactive
+python -m ai_audio_detector --interactive
 # or
-python ai_audio_detector.py --predict-file path/to/audio.wav
+python -m ai_audio_detector --predict-file path/to/audio.wav
 ```
 
 3. **Choose option 1** to train new models and follow the prompts.

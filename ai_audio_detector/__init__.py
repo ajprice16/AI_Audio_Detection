@@ -1768,10 +1768,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python ai_audio_detector.py --interactive
-  python ai_audio_detector.py --predict-file audio.wav
-  python ai_audio_detector.py --predict-batch /path/to/audio/files
-  python ai_audio_detector.py --train --human-dir /path/to/human --ai-dir /path/to/ai
+  ai-audio-detector --interactive
+  ai-audio-detector --predict-file audio.wav
+  ai-audio-detector --predict-batch /path/to/audio/files
+  ai-audio-detector --train --human-dir /path/to/human --ai-dir /path/to/ai
         """,
     )
 

@@ -48,16 +48,16 @@ test-coverage:
 # Code quality
 lint:
 	$(PYTHON) -m flake8 .
-	$(PYTHON) -m bandit -r ai_audio_detector.py example_usage.py --skip B110,B112,B311,B404,B602
+	$(PYTHON) -m bandit -r ai_audio_detector/ example_usage.py --skip B110,B112,B311,B404,B602
 
 format:
 	$(PYTHON) -m black .
 
 type-check:
-	$(PYTHON) -m mypy ai_audio_detector.py --ignore-missing-imports
+	$(PYTHON) -m mypy ai_audio_detector/ --ignore-missing-imports
 
 security:
-	$(PYTHON) -m bandit -r ai_audio_detector.py example_usage.py --skip B110,B112,B311 --severity-level medium
+	$(PYTHON) -m bandit -r ai_audio_detector/ example_usage.py --skip B110,B112,B311 --severity-level medium
 	$(PYTHON) -m safety scan
 
 # Pre-commit

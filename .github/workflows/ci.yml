@@ -65,7 +65,7 @@ jobs:
 
     - name: Type check with mypy
       run: |
-        mypy ai_audio_detector.py --ignore-missing-imports
+        mypy ai_audio_detector/ --ignore-missing-imports
 
     - name: Test with pytest
       run: |
