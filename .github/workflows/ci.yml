@@ -203,11 +203,6 @@ jobs:
     needs: [test, security, build]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    environment:
-      name: pypi
-      url: https://pypi.org/p/ai-audio-detector
-    permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
 
     steps:
     - uses: actions/checkout@v4
@@ -249,9 +244,8 @@ jobs:
       with:
         repository-url: https://test.pypi.org/legacy/
         skip-existing: true
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        user: __token__
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
 
     - name: Test installation from Test PyPI
       run: |
@@ -263,9 +257,8 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         skip-existing: true
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
