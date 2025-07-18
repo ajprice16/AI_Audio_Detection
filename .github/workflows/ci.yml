@@ -244,8 +244,9 @@ jobs:
       with:
         repository-url: https://test.pypi.org/legacy/
         skip-existing: true
-        user: __token__
-        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
 
     - name: Test installation from Test PyPI
       run: |
@@ -257,8 +258,9 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         skip-existing: true
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
