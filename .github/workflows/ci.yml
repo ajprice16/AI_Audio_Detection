@@ -203,6 +203,8 @@ jobs:
     needs: [test, security, build]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write  # Required for creating releases
 
     steps:
     - uses: actions/checkout@v4
@@ -271,40 +273,31 @@ jobs:
         fi
 
     - name: Create GitHub Release
-      uses: actions/create-release@v1
+      run: |
+        # Create a zip of the dist folder
+        cd dist && zip -r ../ai-audio-detector-${{ steps.version.outputs.version }}-dist.zip . && cd ..
+
+        # Create the release using GitHub CLI
+        gh release create ${{ steps.version.outputs.tag }} \
+          --title "Release ${{ steps.version.outputs.tag }}" \
+          --notes "## AI Audio Detector ${{ steps.version.outputs.version }}
+
+        🎉 **New Release Available on PyPI!**
+
+        ### Installation
+        \`\`\`bash
+        pip install ai-audio-detector==${{ steps.version.outputs.version }}
+        \`\`\`
+
+        ### What's New
+        - See [CHANGELOG.md](https://github.com/ajprice16/AI_Audio_Detection/blob/main/CHANGELOG.md) for details
+
+        ### Package Information
+        - **PyPI**: https://pypi.org/project/ai-audio-detector/${{ steps.version.outputs.version }}/
+        - **Test PyPI**: https://test.pypi.org/project/ai-audio-detector/${{ steps.version.outputs.version }}/
+
+        ### Verification
+        All tests, security scans, and quality checks have passed ✅" \
+          ai-audio-detector-${{ steps.version.outputs.version }}-dist.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.version.outputs.tag }}
-        release_name: Release ${{ steps.version.outputs.tag }}
-        body: |
-          ## AI Audio Detector ${{ steps.version.outputs.version }}
-
-          🎉 **New Release Available on PyPI!**
-
-          ### Installation
-          ```bash
-          pip install ai-audio-detector==${{ steps.version.outputs.version }}
-          ```
-
-          ### What's New
-          - See [CHANGELOG.md](https://github.com/ajprice16/AI_Audio_Detection/blob/main/CHANGELOG.md) for details
-
-          ### Package Information
-          - **PyPI**: https://pypi.org/project/ai-audio-detector/${{ steps.version.outputs.version }}/
-          - **Test PyPI**: https://test.pypi.org/project/ai-audio-detector/${{ steps.version.outputs.version }}/
-
-          ### Verification
-          All tests, security scans, and quality checks have passed ✅
-        draft: false
-        prerelease: false
-
-    - name: Upload release artifacts
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/
-        asset_name: ai-audio-detector-${{ steps.version.outputs.version }}-dist.zip
-        asset_content_type: application/zip
