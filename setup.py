@@ -1,20 +1,6 @@
 #!/usr/bin/env python3
 """
-Setup ssetup(
-    name="ai-audio-detector",
-    version="1.0.6",
-    author="Alex Price",
-    author_email="ajprice@mail.wlu.edu",
-    description="Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/ajprice16/AI_Audio_Detection",
-    packages=find_packages(),
-    classifiers=[
-        "Development Status :: 4 - Beta",
-        "Intended Audience :: Developers",
-        "Intended Audience :: Science/Research",
-        "Operating System :: OS Independent",io Detector
+Setup script for AI Audio Detector
 """
 
 from setuptools import setup, find_packages
@@ -48,9 +34,9 @@ else:
 
 setup(
     name="ai-audio-detector",
-    version="1.0.6",
+    version="1.0.7",
     author="Alex Price",
-    author_email="ajprice@mail.wli.edu",
+    author_email="ajprice@mail.wlu.edu",
     description="Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
     long_description=long_description,
     long_description_content_type="text/markdown",
