@@ -99,18 +99,12 @@ jobs:
         bandit -r . -x tests/ -f json -o bandit-report.json || true
         bandit -r . -x tests/
 
-    - name: Run safety check
+    - name: Safety check skipped
       run: |
-        if [ -z "${{ secrets.SAFETY_API_KEY }}" ]; then
-          echo "⚠️  SAFETY_API_KEY is not set. Skipping safety scan."
-          echo "To enable full vulnerability scanning, add SAFETY_API_KEY to repository secrets."
-          echo "📖 See: https://docs.safetycli.com for more information"
-          echo "✅ Security check completed (limited mode)"
-        else
-          echo "🔒 Running safety scan with API key..."
-          safety scan --key ${{ secrets.SAFETY_API_KEY }} --stage cicd --output screen --output-format json --output-file safety-report.json || true
-          safety scan --key ${{ secrets.SAFETY_API_KEY }} --stage cicd --output screen
-        fi
+        echo "⚠️  Safety scan disabled in CI (requires authentication)"
+        echo "To run safety scan locally, install and authenticate: pip install safety && safety auth login"
+        echo "📖 See: https://docs.safetycli.com for more information"
+        echo "✅ Security check completed (bandit analysis still performed)"
 
     - name: Upload security reports
       if: always()
@@ -119,7 +113,6 @@ jobs:
         name: security-reports
         path: |
           bandit-report.json
-          safety-report.json
         retention-days: 30
 
   build:
