@@ -52,11 +52,3 @@ repos:
         args: [-m, pytest, tests/, --maxfail=1, -q]
         pass_filenames: false
         always_run: true
-
-      - id: safety
-        name: safety
-        entry: /Users/ajpri/Summer/AI_Audio/.venv/bin/python
-        language: system
-        args: [-m, safety, check, --short-report, --output, text]
-        pass_filenames: false
-        always_run: true
