@@ -1,0 +1,57 @@
+name: Dependency Submission
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-submission:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # Manual component detection approach
+    - name: Component Detection (Manual)
+      run: |
+        echo "🔍 Running manual component detection for Python dependencies..."
+
+        # Create output directory
+        mkdir -p component-detection-output
+
+        # Generate dependency information
+        echo "📦 Analyzing Python dependencies..."
+        pip list --format=json > component-detection-output/pip-dependencies.json
+
+        # Generate requirements freeze
+        pip freeze > component-detection-output/requirements-freeze.txt
+
+        # Display summary
+        echo "✅ Component detection completed successfully"
+        echo "📊 Dependencies found:"
+        pip list | wc -l
+
+        echo "📄 Output files created:"
+        ls -la component-detection-output/
+
+    - name: Upload dependency artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dependency-analysis
+        path: component-detection-output/
+        retention-days: 30
