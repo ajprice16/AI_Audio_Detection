@@ -34,7 +34,7 @@ else:
 
 setup(
     name="ai-audio-detector",
-    version="1.0.7",
+    version="1.1.0",
     author="Alex Price",
     author_email="ajprice@mail.wlu.edu",
     description="Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
