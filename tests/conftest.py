@@ -8,16 +8,13 @@ import shutil
 import numpy as np
 from pathlib import Path
 import pandas as pd
-import sys
-
-# Add the parent directory to path to import the module
-sys.path.insert(0, str(Path(__file__).parent.parent))
+from typing import Generator, Tuple, List, Dict, Any
 
 from ai_audio_detector import AIAudioDetector
 
 
 @pytest.fixture
-def temp_dir():
+def temp_dir() -> Generator[Path, None, None]:
     """Create a temporary directory for tests"""
     temp_dir = tempfile.mkdtemp()
     yield Path(temp_dir)
@@ -25,7 +22,7 @@ def temp_dir():
 
 
 @pytest.fixture
-def sample_audio_data():
+def sample_audio_data() -> Tuple[np.ndarray, int]:
     """Generate sample audio data for testing"""
     sample_rate = 22050
     duration = 1.0  # 1 second
@@ -35,7 +32,7 @@ def sample_audio_data():
 
 
 @pytest.fixture
-def sample_features_data():
+def sample_features_data() -> pd.DataFrame:
     """Generate sample feature data for testing"""
     return pd.DataFrame(
         {
@@ -72,20 +69,20 @@ def sample_features_data():
 
 
 @pytest.fixture
-def ai_detector(temp_dir):
+def ai_detector(temp_dir: Path) -> AIAudioDetector:
     """Create an AI detector instance for testing"""
     return AIAudioDetector(base_dir=temp_dir)
 
 
 @pytest.fixture
-def trained_detector(ai_detector, sample_features_data):
+def trained_detector(ai_detector: AIAudioDetector, sample_features_data: pd.DataFrame) -> AIAudioDetector:
     """Create a trained AI detector for testing"""
     ai_detector.train_models(sample_features_data)
     return ai_detector
 
 
 @pytest.fixture(scope="session", autouse=True)
-def setup_test_environment():
+def setup_test_environment() -> None:
     """Set up the test environment"""
     # Suppress warnings during testing
     import warnings
@@ -100,7 +97,7 @@ def setup_test_environment():
     random.seed(42)
 
 
-def pytest_configure(config):
+def pytest_configure(config: Any) -> None:
     """Configure pytest with custom markers"""
     config.addinivalue_line("markers", "slow: mark test as slow running")
     config.addinivalue_line("markers", "integration: mark test as integration test")
@@ -108,7 +105,7 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "benchmark: mark test as benchmark")
 
 
-def pytest_collection_modifyitems(config, items):
+def pytest_collection_modifyitems(config: Any, items: Any) -> None:
     """Modify test collection to add markers automatically"""
     for item in items:
         # Mark slow tests

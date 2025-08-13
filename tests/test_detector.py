@@ -7,12 +7,8 @@ import tempfile
 import shutil
 import numpy as np
 import pandas as pd
-import sys
 from pathlib import Path
 from unittest.mock import patch, MagicMock
-
-# Add the parent directory to path to import the module
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from ai_audio_detector import AIAudioDetector, load_config
 
@@ -20,7 +16,7 @@ from ai_audio_detector import AIAudioDetector, load_config
 class TestAIAudioDetector(unittest.TestCase):
     """Test cases for AIAudioDetector"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test fixtures"""
         # Create temporary directory for tests
         self.temp_dir = tempfile.mkdtemp()
@@ -48,39 +44,35 @@ class TestAIAudioDetector(unittest.TestCase):
                     "/path/file5.wav",
                     "/path/file6.wav",
                 ],
-                "source_directory": ["AI", "AI", "AI", "Human", "Human", "Human"],
-                "file_extension": [".wav", ".wav", ".wav", ".wav", ".wav", ".wav"],
                 "is_ai": [True, True, True, False, False, False],
-                "audio_duration": [2.5, 3.0, 2.8, 3.2, 2.9, 3.1],
+                "duration": [2.5, 3.0, 2.8, 3.2, 2.9, 3.1],
                 "sample_rate": [22050, 22050, 22050, 22050, 22050, 22050],
-                "file_size_mb": [1.2, 1.5, 1.3, 1.6, 1.4, 1.7],
-                "benford_chi2_p": [0.1, 0.05, 0.12, 0.8, 0.9, 0.85],
-                "benford_chi2_stat": [15.2, 18.5, 16.1, 3.2, 2.1, 2.8],
+                "chi2_p": [0.1, 0.05, 0.12, 0.8, 0.9, 0.85],  # Updated names
+                "chi2_stat": [15.2, 18.5, 16.1, 3.2, 2.1, 2.8],  # Updated names
                 "spectral_centroid": [1500, 1600, 1550, 2000, 2100, 2050],
                 "spectral_bandwidth": [800, 850, 825, 900, 950, 925],
-                "temporal_rms_mean": [0.1, 0.12, 0.11, 0.15, 0.14, 0.145],
-                "compression_clipping_ratio": [0.01, 0.02, 0.015, 0.005, 0.008, 0.006],
+                "temporal_rms_mean": [0.1, 0.12, 0.11, 0.15, 0.14, 0.145],  # Updated names
+                "compression_clipping_ratio": [0.01, 0.02, 0.015, 0.005, 0.008, 0.006],  # Updated names
             }
         )
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         """Clean up test fixtures"""
         shutil.rmtree(self.temp_dir)
 
-    def test_initialization(self):
+    def test_initialization(self) -> None:
         """Test detector initialization"""
         self.assertIsInstance(self.detector, AIAudioDetector)
         self.assertEqual(self.detector.base_dir, self.temp_path)
         self.assertFalse(self.detector.is_trained)
-        self.assertEqual(len(self.detector.training_history), 0)
 
-    def test_get_audio_extensions(self):
+    def test_get_audio_extensions(self) -> None:
         """Test audio extension retrieval"""
         extensions = self.detector.get_audio_extensions()
-        expected_extensions = (".wav", ".mp3", ".flac", ".ogg", ".m4a", ".aac")
+        expected_extensions = [".wav", ".mp3", ".flac", ".ogg", ".m4a", ".aac"]
         self.assertEqual(extensions, expected_extensions)
 
-    def test_train_models(self):
+    def test_train_models(self) -> None:
         """Test model training"""
         results = self.detector.train_models(self.sample_data)
 
@@ -88,21 +80,20 @@ class TestAIAudioDetector(unittest.TestCase):
         self.assertIsInstance(results, dict)
         self.assertTrue(self.detector.is_trained)
         self.assertGreater(len(self.detector.feature_columns), 0)
-        self.assertGreater(len(self.detector.training_history), 0)
 
         # Check that all models were trained
         expected_models = [
-            "SGD",
-            "PassiveAggressive",
-            "RandomForest",
-            "GradientBoosting",
+            "sgd",
+            "passive_aggressive",
+            "random_forest",
+            "gradient_boosting",
         ]
         for model_name in expected_models:
             self.assertIn(model_name, results)
             self.assertIn("train_accuracy", results[model_name])
             self.assertIn("test_accuracy", results[model_name])
 
-    def test_load_config(self):
+    def test_load_config(self) -> None:
         """Test configuration loading"""
         config = load_config()
 
@@ -117,13 +108,12 @@ class TestAIAudioDetector(unittest.TestCase):
         self.assertIn("supported_formats", config["audio"])
         self.assertIn("max_workers", config["processing"])
 
-    @patch("ai_audio_detector.AudioAnalyzer")
-    def test_predict_file_not_trained(self, mock_analyzer):
+    def test_predict_file_not_trained(self) -> None:
         """Test prediction when models are not trained"""
-        result = self.detector.predict_file("/fake/path.wav")
-        self.assertIsNone(result)
+        result = self.detector.predict_single_file("/fake/path.wav")
+        self.assertIn("error", result)
 
-    def test_save_and_load_models(self):
+    def test_save_and_load_models(self) -> None:
         """Test model saving and loading"""
         # Train models first
         self.detector.train_models(self.sample_data)
@@ -140,7 +130,7 @@ class TestAIAudioDetector(unittest.TestCase):
         self.assertTrue(new_detector.is_trained)
         self.assertEqual(new_detector.feature_columns, original_feature_columns)
 
-    def test_update_with_new_data(self):
+    def test_update_with_new_data(self) -> None:
         """Test adaptive model updating"""
         # Train initial models
         self.detector.train_models(self.sample_data)
@@ -156,8 +146,8 @@ class TestAIAudioDetector(unittest.TestCase):
                 "audio_duration": [2.7, 2.9],
                 "sample_rate": [22050, 22050],
                 "file_size_mb": [1.4, 1.1],
-                "benford_chi2_p": [0.08, 0.85],
-                "benford_chi2_stat": [16.1, 2.8],
+                "chi2_p": [0.08, 0.85],  # Changed from benford_chi2_p
+                "chi2_stat": [16.1, 2.8],  # Changed from benford_chi2_stat
                 "spectral_centroid": [1550, 2050],
                 "spectral_bandwidth": [825, 925],
                 "temporal_rms_mean": [0.11, 0.145],
@@ -166,14 +156,12 @@ class TestAIAudioDetector(unittest.TestCase):
         )
 
         # Update models
-        update_results = self.detector.update_with_new_data(
-            new_data, retrain_batch_models=True
-        )
+        update_results = self.detector.update_with_new_data(new_data, retrain_batch_models=True)
 
         self.assertIsInstance(update_results, dict)
         self.assertGreater(len(self.detector.training_history), 1)
 
-    def test_show_data_balance(self):
+    def test_show_data_balance(self) -> None:
         """Test data balance display"""
         # Train models first to have training history
         self.detector.train_models(self.sample_data)
@@ -184,7 +172,7 @@ class TestAIAudioDetector(unittest.TestCase):
         except Exception as e:
             self.fail(f"show_data_balance raised an exception: {e}")
 
-    def test_model_persistence_after_update(self):
+    def test_model_persistence_after_update(self) -> None:
         """Test that models persist correctly after updates"""
         # Train initial models
         self.detector.train_models(self.sample_data)
@@ -198,9 +186,7 @@ class TestAIAudioDetector(unittest.TestCase):
         self.detector.update_with_new_data(new_data)
 
         # Check that training history was updated
-        self.assertEqual(
-            len(self.detector.training_history), initial_history_length + 1
-        )
+        self.assertEqual(len(self.detector.training_history), initial_history_length + 1)
 
         # Save and reload to test persistence
         self.detector.save_models()

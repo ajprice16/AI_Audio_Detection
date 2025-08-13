@@ -13,14 +13,14 @@ from pathlib import Path
 import tempfile
 import librosa
 from scipy.io.wavfile import write as write_wav
-
-# Add the package to path if running from source
-sys.path.insert(0, str(Path(__file__).parent))
+from typing import Tuple
 
 from ai_audio_detector import AIAudioDetector, AudioAnalyzer, AudioFeatureExtractor
 
 
-def generate_synthetic_audio(duration=5.0, sample_rate=22050, frequency=440):
+def generate_synthetic_audio(
+    duration: float = 5.0, sample_rate: int = 22050, frequency: float = 440
+) -> Tuple[np.ndarray, int]:
     """Generate synthetic audio for testing purposes."""
     t = np.linspace(0, duration, int(sample_rate * duration))
     # Create a simple sine wave with some noise to simulate real audio
@@ -28,7 +28,7 @@ def generate_synthetic_audio(duration=5.0, sample_rate=22050, frequency=440):
     return audio, sample_rate
 
 
-def demonstrate_feature_extraction():
+def demonstrate_feature_extraction() -> None:
     """Demonstrate audio feature extraction capabilities."""
     print("=== Audio Feature Extraction Demo ===")
 
@@ -58,7 +58,7 @@ def demonstrate_feature_extraction():
             os.unlink(tmp.name)
 
 
-def demonstrate_benford_analysis():
+def demonstrate_benford_analysis() -> None:
     """Demonstrate Benford's Law analysis on audio data."""
     print("\n=== Benford's Law Analysis Demo ===")
 
@@ -76,9 +76,7 @@ def demonstrate_benford_analysis():
             results = analyzer.analyze_audio_file(tmp.name)
 
             # Extract Benford's Law related features
-            benford_features = {
-                k: v for k, v in results.items() if "benford" in k.lower()
-            }
+            benford_features = {k: v for k, v in results.items() if "benford" in k.lower()}
 
             print(f"Benford's Law features extracted:")
             for key, value in benford_features.items():
@@ -88,7 +86,7 @@ def demonstrate_benford_analysis():
             os.unlink(tmp.name)
 
 
-def demonstrate_ensemble_classification():
+def demonstrate_ensemble_classification() -> None:
     """Demonstrate ensemble classification with multiple models."""
     print("\n=== Ensemble Classification Demo ===")
 
@@ -117,23 +115,22 @@ def demonstrate_ensemble_classification():
         print(f"Testing ensemble classification on {len(test_files)} audio samples...")
 
         for i, audio_file in enumerate(test_files):
-            result = detector.predict_file(audio_file, return_details=True)
+            result = detector.predict_single_file(audio_file)
 
             if result:
                 print(f"Sample {i+1}:")
                 # Correctly handle boolean prediction values
-                prediction_bool = result.get("prediction", False)
-                print(f"  Prediction: {'AI' if prediction_bool else 'Human'}")
+                prediction = result.get("prediction", "Unknown")
+                print(f"  Prediction: {prediction}")
                 print(f"  Confidence: {result.get('confidence', 0):.3f}")
 
                 # Show model-specific predictions if available
-                if "individual_predictions" in result:
+                if "model_predictions" in result:
                     print("  Individual model predictions:")
-                    for model_name, pred_data in result[
-                        "individual_predictions"
-                    ].items():
-                        ai_prob = pred_data.get("ai_probability", 0)
-                        print(f"    {model_name}: {ai_prob:.3f}")
+                    for model_name, pred in result["model_predictions"].items():
+                        confidence = result.get("model_confidences", {}).get(model_name, 0)
+                        pred_text = "AI" if pred else "Human"
+                        print(f"    {model_name}: {pred_text} ({confidence:.3f})")
             else:
                 print(f"Sample {i+1}: Analysis failed")
 
@@ -146,7 +143,7 @@ def demonstrate_ensemble_classification():
                 pass
 
 
-def demonstrate_batch_processing():
+def demonstrate_batch_processing() -> None:
     """Demonstrate batch processing capabilities."""
     print("\n=== Batch Processing Demo ===")
 
@@ -171,19 +168,19 @@ def demonstrate_batch_processing():
         # Process batch using the directory
         results = detector.predict_batch(str(temp_path))
 
-        if results is not None and not results.empty:
+        if results is not None and len(results) > 0:
             print("Batch processing results:")
-            for idx, row in results.iterrows():
-                # Use 'is_ai' column from the DataFrame
-                prediction = "AI" if row.get("is_ai", False) else "Human"
-                confidence = row.get("confidence", 0)
-                filename = row.get("filename", f"file_{idx}")
+            for idx, result in enumerate(results):
+                # Use prediction result from the dictionary
+                prediction = result.get("prediction", "Unknown")
+                confidence = result.get("confidence", 0)
+                filename = result.get("filename", f"file_{idx}")
                 print(f"  {filename}: {prediction} (confidence: {confidence:.3f})")
         else:
             print("Batch processing completed with no results")
 
 
-def performance_benchmark():
+def performance_benchmark() -> None:
     """Simple performance benchmark."""
     print("\n=== Performance Benchmark ===")
 
@@ -204,7 +201,7 @@ def performance_benchmark():
         try:
             # Time the analysis
             start_time = time.time()
-            result = detector.predict_file(tmp.name)
+            result = detector.predict_single_file(tmp.name)
             end_time = time.time()
 
             analysis_time = end_time - start_time
@@ -218,7 +215,7 @@ def performance_benchmark():
             os.unlink(tmp.name)
 
 
-def main():
+def main() -> int:
     """Run all demonstrations."""
     print("AI Audio Detector - JOSS Paper Examples")
     print("=" * 50)

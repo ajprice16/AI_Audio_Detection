@@ -8,17 +8,13 @@ from pathlib import Path
 
 # Read the README file
 readme_path = Path(__file__).parent / "README.md"
-long_description = (
-    readme_path.read_text(encoding="utf-8") if readme_path.exists() else ""
-)
+long_description = readme_path.read_text(encoding="utf-8") if readme_path.exists() else ""
 
 # Read requirements
 requirements_path = Path(__file__).parent / "requirements.txt"
 if requirements_path.exists():
     with open(requirements_path, "r", encoding="utf-8") as f:
-        requirements = [
-            line.strip() for line in f if line.strip() and not line.startswith("#")
-        ]
+        requirements = [line.strip() for line in f if line.strip() and not line.startswith("#")]
 else:
     requirements = [
         "numpy>=1.21.0",
