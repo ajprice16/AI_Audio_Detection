@@ -7,7 +7,7 @@ import numpy as np
 from pathlib import Path
 from typing import Any, Union, List
 
-from ai_audio_detector import AudioFeatureExtractor
+from aiaa import AudioFeatureExtractor
 
 
 def is_numeric(value: Any) -> bool:

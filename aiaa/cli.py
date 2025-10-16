@@ -1,5 +1,5 @@
 """
-Command-line interface for AI Audio Detector.
+Command-line interface for AIAA: AI Audio Authenticity.
 """
 
 import argparse
@@ -18,7 +18,7 @@ def run_interactive_mode(detector: AIAudioDetector) -> None:
     Args:
         detector: Initialized AIAudioDetector instance.
     """
-    print("\n=== AI Audio Detector - Interactive Mode ===")
+    print("\n=== AIAA: AI Audio Authenticity - Interactive Mode ===")
     print("Commands:")
     print("  predict <file_path> - Predict if audio file is AI-generated")
     print("  batch <directory> - Predict for all files in directory")
@@ -218,24 +218,24 @@ def run_interactive_mode(detector: AIAudioDetector) -> None:
 def main() -> None:
     """Main entry point for the CLI."""
     parser = argparse.ArgumentParser(
-        description="AI Audio Detector - Detect AI-generated audio using machine learning",
+        description="AIAA: AI Audio Authenticity - Detect AI-generated audio using machine learning",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # Train models
-  python -m ai_audio_detector --train --ai-dir path/to/ai/audio --human-dir path/to/human/audio
+  python -m aiaa --train --ai-dir path/to/ai/audio --human-dir path/to/human/audio
 
   # Predict single file
-  python -m ai_audio_detector --predict path/to/audio.wav
+  python -m aiaa --predict path/to/audio.wav
 
   # Batch prediction
-  python -m ai_audio_detector --batch path/to/audio/directory
+  python -m aiaa --batch path/to/audio/directory
 
   # Interactive mode
-  python -m ai_audio_detector --interactive
+  python -m aiaa --interactive
 
   # Generate spectrogram
-  python -m ai_audio_detector --spectrogram path/to/audio.wav
+  python -m aiaa --spectrogram path/to/audio.wav
         """,
     )
 

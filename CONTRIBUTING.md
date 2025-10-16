@@ -1,6 +1,6 @@
-# Contributing to AI Audio Detector
+# Contributing to AIAA: AI Audio Authenticity
 
-Thank you for your interest in contributing to the AI Audio Detector! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to AIAA: AI Audio Authenticity! This document provides guidelines and information for contributors.
 
 ## Table of Contents
 
@@ -21,8 +21,8 @@ This project adheres to a code of conduct. By participating, you are expected to
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/yourusername/ai-audio-detector.git
-   cd ai-audio-detector
+   git clone https://github.com/yourusername/AI_Audio_Detection.git
+   cd AI_Audio_Detection
    ```
 3. **Create a branch** for your feature or bug fix:
    ```bash
@@ -73,8 +73,8 @@ Good pull requests include:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/ai-audio-detector.git
-   cd ai-audio-detector
+   git clone https://github.com/yourusername/AI_Audio_Detection.git
+   cd AI_Audio_Detection
    ```
 
 2. **Create a virtual environment**:
@@ -97,8 +97,8 @@ Good pull requests include:
 ### Project Structure
 
 ```
-ai-audio-detector/
-├── ai_audio_detector.py      # Main implementation
+AI_Audio_Detection/
+├── aiaa/                     # Main package
 ├── example_usage.py          # Usage examples
 ├── config.yaml              # Configuration file
 ├── requirements.txt          # Python dependencies
@@ -120,15 +120,15 @@ ai-audio-detector/
 - Follow **PEP 8** style guidelines
 - Use **Black** for code formatting:
   ```bash
-  black ai_audio_detector.py
+  black aiaa/
   ```
 - Use **isort** for import sorting:
   ```bash
-  isort ai_audio_detector.py
+  isort aiaa/
   ```
 - Use **flake8** for linting:
   ```bash
-  flake8 ai_audio_detector.py
+  flake8 aiaa/
   ```
 
 ### Documentation
@@ -153,16 +153,16 @@ ai-audio-detector/
 ```bash
 # Run basic functionality tests
 python -c "
-from ai_audio_detector import AIAudioDetector
+from aiaa import AIAudioDetector
 detector = AIAudioDetector()
 print('Tests passed')
 "
 
 # Run linting
-flake8 ai_audio_detector.py
+flake8 aiaa/
 
 # Test imports
-python -c "from ai_audio_detector import AIAudioDetector, AudioFeatureExtractor"
+python -c "from aiaa import AIAudioDetector, AudioFeatureExtractor"
 ```
 
 ### Test Coverage
@@ -259,4 +259,4 @@ If you have questions about contributing:
 2. **Create a new issue** for discussion
 3. **Join the discussion** in existing issues
 
-Thank you for contributing to AI Audio Detector!
+Thank you for contributing to AIAA: AI Audio Authenticity!

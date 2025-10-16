@@ -9,7 +9,7 @@ import numpy as np
 import soundfile as sf
 from pathlib import Path
 
-from ai_audio_detector import AIAudioDetector, AudioAnalyzer
+from aiaa import AIAudioDetector, AudioAnalyzer
 
 
 class TestIntegration(unittest.TestCase):

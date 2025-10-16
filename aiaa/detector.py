@@ -1,5 +1,5 @@
 """
-Core AI Audio Detector class and related utilities.
+Core AIAA: AI Audio Authenticity class and related utilities.
 """
 
 from typing import Dict, List, Any, Optional, Tuple, Union, cast
@@ -61,7 +61,7 @@ def process_single_prediction(args: Tuple) -> Dict[str, Any]:
 
 class AIAudioDetector:
     """
-    Main AI Audio Detector class.
+    Main AIAA: AI Audio Authenticity class.
 
     This class provides functionality for training machine learning models
     to detect AI-generated audio using various audio features including
@@ -70,7 +70,7 @@ class AIAudioDetector:
 
     def __init__(self, base_dir: Optional[Union[str, Path]] = None, config_path: Optional[Path] = None):
         """
-        Initialize the AI Audio Detector.
+        Initialize the AIAA detector.
 
         Args:
             base_dir: Base directory for storing models and results.
@@ -443,7 +443,7 @@ class AIAudioDetector:
                 "timestamp": datetime.now().isoformat(),
             }
 
-            model_file = self.models_dir / "ai_audio_detector.joblib"
+            model_file = self.models_dir / "aiaa.joblib"
             joblib.dump(model_data, model_file)
             print(f"Models saved to {model_file}")
             return True
@@ -460,7 +460,7 @@ class AIAudioDetector:
             True if successful, False otherwise.
         """
         try:
-            model_file = self.models_dir / "ai_audio_detector.joblib"
+            model_file = self.models_dir / "aiaa.joblib"
             if not model_file.exists():
                 return False
 

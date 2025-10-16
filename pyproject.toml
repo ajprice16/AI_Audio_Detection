@@ -3,15 +3,15 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ai-audio-detector"
+name = "aiaa"
 version = "1.1.0"
-description = "Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features"
+description = "AIAA: AI Audio Authenticity - Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
     {name = "Alex Price", email = "ajprice@mail.wlu.edu"},
 ]
-keywords = ["ai", "detection", "audio", "machine-learning", "benford-law", "audio-analysis"]
+keywords = ["ai", "detection", "audio", "machine-learning", "benford-law", "audio-analysis", "authenticity"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -80,11 +80,11 @@ test = [
 "Documentation" = "https://github.com/ajprice16/AI_Audio_Detection#readme"
 
 [project.scripts]
-ai-audio-detector = "ai_audio_detector:main"
+aiaa = "aiaa:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["ai_audio_detector*"]
+include = ["aiaa*"]
 exclude = ["tests*"]
 
 [tool.black]
@@ -124,7 +124,7 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 
 [tool.coverage.run]
-source = ["ai_audio_detector"]
+source = ["aiaa"]
 omit = [
     "tests/*",
     "setup.py",

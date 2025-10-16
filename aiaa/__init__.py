@@ -1,5 +1,5 @@
 """
-AI Audio Detector using Benford's Law and librosa audio feature extraction.
+AIAA: AI Audio Authenticity using Benford's Law and librosa audio feature extraction.
 Trains Random Forest, Gradient Boosting, SGD, and Passive Aggressive classifiers.
 Returns highest confidence prediction with detailed feature analysis.
 """

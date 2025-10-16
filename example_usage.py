@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Example usage of the AI Audio Detector
+Example usage of AIAA: AI Audio Authenticity
 
 This script demonstrates how to use the AIAudioDetector programmatically.
 """
@@ -8,7 +8,7 @@ This script demonstrates how to use the AIAudioDetector programmatically.
 import pandas as pd
 from pathlib import Path
 from typing import Optional
-from ai_audio_detector import AIAudioDetector
+from aiaa import AIAudioDetector
 
 
 def example_training() -> None:
@@ -167,7 +167,7 @@ def example_spectrograms() -> None:
 
 def main() -> None:
     """Run all examples."""
-    print("AI Audio Detector - Example Usage")
+    print("AIAA: AI Audio Authenticity - Example Usage")
     print("=" * 50)
 
     # Step 1: Training (commented out - requires actual audio directories)

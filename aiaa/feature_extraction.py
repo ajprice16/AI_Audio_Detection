@@ -1,5 +1,5 @@
 """
-Audio feature extraction utilities for AI Audio Detector.
+Audio feature extraction utilities for AIAA: AI Audio Authenticity.
 """
 
 from typing import Dict, List, Any, Optional
