@@ -1,5 +1,5 @@
 """
-Integration tests for the AI Audio Detector system
+Integration tests for the AIAA: AI Audio Authenticity system
 """
 
 import unittest

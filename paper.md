@@ -106,7 +106,7 @@ Several approaches exist for AI-generated content detection:
 2. **Spectral analysis methods** [@yang2019exposing] focus on frequency-domain anomalies
 3. **Temporal consistency analysis** [@li2020identification] examines temporal patterns in generated content
 
-AI Audio Detector distinguishes itself by incorporating Benford's Law analysis, which provides a mathematically principled statistical foundation for detection that complements traditional signal processing approaches.
+AIAA distinguishes itself by incorporating Benford's Law analysis, which provides a mathematically principled statistical foundation for detection that complements traditional signal processing approaches.
 The package also uses unique and combined implementations of input data and processing for maximum detection capability
 
 # Future Work
