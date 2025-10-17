@@ -158,6 +158,9 @@ performance-*.json
 docs/_build/
 docs/build/
 
+# CI/CD internal documentation
+.github/CI_OPTIMIZATION.md
+
 # IDE
 .vscode/
 .idea/
