@@ -67,7 +67,7 @@ class AudioAnalyzer:
                 # Use spectral centroid frequencies for Benford analysis
                 stft = librosa.stft(y)
                 magnitudes = np.abs(stft)
-                frequencies = []
+                frequencies: list[float] = []
 
                 for frame in magnitudes.T:
                     if np.sum(frame) > 0:
