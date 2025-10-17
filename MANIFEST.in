@@ -8,10 +8,10 @@ include requirements-dev.txt
 include config.yaml
 
 # Include package data
-recursive-include ai_audio_detector *.py
-recursive-include ai_audio_detector *.yaml
-recursive-include ai_audio_detector *.yml
-recursive-include ai_audio_detector *.json
+recursive-include aiaa *.py
+recursive-include aiaa *.yaml
+recursive-include aiaa *.yml
+recursive-include aiaa *.json
 
 # Include tests
 recursive-include tests *.py
