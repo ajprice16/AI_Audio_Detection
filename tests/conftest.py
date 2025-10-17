@@ -10,7 +10,7 @@ from pathlib import Path
 import pandas as pd
 from typing import Generator, Tuple, List, Dict, Any
 
-from ai_audio_detector import AIAudioDetector
+from aiaa import AIAudioDetector
 
 
 @pytest.fixture

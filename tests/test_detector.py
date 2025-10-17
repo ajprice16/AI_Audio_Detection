@@ -10,7 +10,7 @@ import pandas as pd
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-from ai_audio_detector import AIAudioDetector, load_config
+from aiaa import AIAudioDetector, load_config
 
 
 class TestAIAudioDetector(unittest.TestCase):

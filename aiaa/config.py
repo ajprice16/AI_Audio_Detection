@@ -1,5 +1,5 @@
 """
-Configuration management for AI Audio Detector.
+Configuration management for AIAA: AI Audio Authenticity.
 """
 
 from pathlib import Path

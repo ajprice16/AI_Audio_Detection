@@ -1,3 +1,3 @@
 """
-Test suite for AI Audio Detector
+Test suite for AIAA: AI Audio Authenticity
 """

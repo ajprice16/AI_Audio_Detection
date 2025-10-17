@@ -1,5 +1,5 @@
 """
-Integration tests for the AI Audio Detector system
+Integration tests for the AIAA: AI Audio Authenticity system
 """
 
 import unittest
@@ -9,7 +9,7 @@ import numpy as np
 import soundfile as sf
 from pathlib import Path
 
-from ai_audio_detector import AIAudioDetector, AudioAnalyzer
+from aiaa import AIAudioDetector, AudioAnalyzer
 
 
 class TestIntegration(unittest.TestCase):

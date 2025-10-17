@@ -1,5 +1,5 @@
 """
-Audio analysis utilities for AI Audio Detector.
+Audio analysis utilities for AIAA: AI Audio Authenticity.
 """
 
 from typing import Dict, Any, Optional, Tuple, Union

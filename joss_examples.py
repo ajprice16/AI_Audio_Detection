@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Example script demonstrating AI Audio Detector functionality for JOSS paper
+Example script demonstrating AIAA: AI Audio Authenticity functionality for JOSS paper
 
 This script provides reproducible examples of the package's core functionality,
 suitable for use in academic validation and review.
@@ -15,7 +15,7 @@ import librosa
 from scipy.io.wavfile import write as write_wav
 from typing import Tuple
 
-from ai_audio_detector import AIAudioDetector, AudioAnalyzer, AudioFeatureExtractor
+from aiaa import AIAudioDetector, AudioAnalyzer, AudioFeatureExtractor
 
 
 def generate_synthetic_audio(
@@ -217,7 +217,7 @@ def performance_benchmark() -> None:
 
 def main() -> int:
     """Run all demonstrations."""
-    print("AI Audio Detector - JOSS Paper Examples")
+    print("AIAA: AI Audio Authenticity - JOSS Paper Examples")
     print("=" * 50)
 
     try:
@@ -229,7 +229,7 @@ def main() -> int:
 
         print("\n" + "=" * 50)
         print("All demonstrations completed successfully!")
-        print("\nThis script demonstrates the core functionality of AI Audio Detector")
+        print("\nThis script demonstrates the core functionality of AIAA: AI Audio Authenticity")
         print("including feature extraction, Benford's Law analysis, ensemble")
         print("classification, and batch processing capabilities.")
 

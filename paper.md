@@ -1,5 +1,5 @@
 ---
-title: 'AI Audio Detector: A Machine Learning System for Detecting AI-Generated Audio Using Benford''s Law and Spectral Analysis'
+title: 'AIAA: AI Audio Authenticity - A Machine Learning System for Detecting AI-Generated Audio Using Benford''s Law and Spectral Analysis'
 tags:
   - Python
   - machine learning
@@ -9,6 +9,7 @@ tags:
   - digital forensics
   - deep learning
   - signal processing
+  - authenticity
 authors:
   - firstname: Alexander
     surname: Price
@@ -37,7 +38,7 @@ bibliography: paper.bib
 
 # Summary
 
-AI Audio Detector is a Python package that implements a machine learning system for detecting artificially generated audio content. As AI-generated audio becomes increasingly sophisticated and prevalent, there is a growing need for reliable detection methods to combat misinformation, deepfakes, and unauthorized voice synthesis. This package addresses this challenge by combining Benford's Law analysis—a statistical principle describing the frequency distribution of leading digits in naturally occurring datasets—with comprehensive spectral feature extraction and ensemble machine learning techniques.
+AIAA: AI Audio Authenticity is a Python package that implements a machine learning system for detecting artificially generated audio content. As AI-generated audio becomes increasingly sophisticated and prevalent, there is a growing need for reliable detection methods to combat misinformation, deepfakes, and unauthorized voice synthesis. This package addresses this challenge by combining Benford's Law analysis—a statistical principle describing the frequency distribution of leading digits in naturally occurring datasets—with comprehensive spectral feature extraction and ensemble machine learning techniques.
 
 The system employs multiple classification algorithms including Random Forest, Gradient Boosting, Stochastic Gradient Descent (SGD), and Passive Aggressive classifiers in an ensemble approach. The package supports incremental learning, batch processing, and works with common audio formats (WAV, MP3, FLAC, OGG, M4A, AAC).
 
@@ -45,7 +46,7 @@ The software package doesn't come with a library through public distribution for
 
 # Statement of need
 
-The rapid advancement of AI audio generation technologies has created an urgent need for robust detection systems. Current solutions often rely on proprietary algorithms or are limited to specific types of AI-generated content. AI Audio Detector fills this gap by providing:
+The rapid advancement of AI audio generation technologies has created an urgent need for robust detection systems. Current solutions often rely on proprietary algorithms or are limited to specific types of AI-generated content. AIAA: AI Audio Authenticity fills this gap by providing:
 
 1. **Open-source accessibility**: This package is freely available for research and practical applications
 2. **Multi-modal analysis**: Combines statistical analysis with traditional audio features
@@ -59,7 +60,7 @@ This tool is particularly valuable for researchers in digital forensics, media v
 
 ## Core Architecture
 
-The AI Audio Detector implements a modular architecture with four main components:
+The AIAA system implements a modular architecture with four main components:
 
 **Audio Feature Extraction**: The `AudioFeatureExtractor` class extracts 46 comprehensive features including mel-frequency cepstral coefficients (MFCCs), spectral characteristics (centroid, bandwidth, rolloff), temporal features (RMS energy, zero-crossing rate), and compression artifacts that may indicate AI generation [@mcfee2015librosa].
 
@@ -74,7 +75,7 @@ The AI Audio Detector implements a modular architecture with four main component
 The package provides both programmatic and command-line interfaces:
 
 ```python
-from ai_audio_detector import AIAudioDetector
+from aiaa import AIAudioDetector
 
 detector = AIAudioDetector()
 result = detector.predict_file("audio_file.wav")
@@ -83,7 +84,7 @@ print(f"Confidence: {result['confidence']}")
 ```
 
 ```bash
-ai-audio-detector analyze path/to/audio/files/ --output results.csv
+aiaa analyze path/to/audio/files/ --output results.csv
 ```
 
 # Results and Validation
@@ -105,7 +106,7 @@ Several approaches exist for AI-generated content detection:
 2. **Spectral analysis methods** [@yang2019exposing] focus on frequency-domain anomalies
 3. **Temporal consistency analysis** [@li2020identification] examines temporal patterns in generated content
 
-AI Audio Detector distinguishes itself by incorporating Benford's Law analysis, which provides a mathematically principled statistical foundation for detection that complements traditional signal processing approaches.
+AIAA distinguishes itself by incorporating Benford's Law analysis, which provides a mathematically principled statistical foundation for detection that complements traditional signal processing approaches.
 The package also uses unique and combined implementations of input data and processing for maximum detection capability
 
 # Future Work

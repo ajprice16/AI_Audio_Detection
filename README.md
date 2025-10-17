@@ -1,4 +1,4 @@
-# AI Audio Detector
+# AIAA: AI Audio Authenticity
 
 A machine learning system for detecting AI-generated audio using Benford's Law analysis and advanced audio feature extraction. The system employs ensemble learning with adaptive model updating capabilities.
 
@@ -26,7 +26,7 @@ A machine learning system for detecting AI-generated audio using Benford's Law a
 ### Option 1: Install from PyPI (Recommended)
 
 ```bash
-pip install ai-audio-detector
+pip install aiaa
 ```
 
 ### Option 2: Install from Source
@@ -66,16 +66,16 @@ brew install libsndfile ffmpeg
 
 **If installed from PyPI:**
 ```bash
-ai-audio-detector --interactive
+aiaa --interactive
 # or
-ai-audio-detector --predict-file path/to/audio.wav
+aiaa --predict-file path/to/audio.wav
 ```
 
 **If running from source:**
 ```bash
-python -m ai_audio_detector --interactive
+python -m aiaa --interactive
 # or
-python -m ai_audio_detector --predict-file path/to/audio.wav
+python -m aiaa --predict-file path/to/audio.wav
 ```
 
 3. **Choose option 1** to train new models and follow the prompts.
@@ -84,48 +84,48 @@ python -m ai_audio_detector --predict-file path/to/audio.wav
 
 **Train models:**
 ```bash
-ai-audio-detector --train --human-dir path/to/human/audio --ai-dir path/to/ai/audio
+aiaa --train --human-dir path/to/human/audio --ai-dir path/to/ai/audio
 ```
 
 **Predict single file:**
 ```bash
-ai-audio-detector --predict-file path/to/audio.wav
+aiaa --predict-file path/to/audio.wav
 ```
 
 **Predict batch:**
 ```bash
-ai-audio-detector --predict-batch path/to/audio/directory
+aiaa --predict-batch path/to/audio/directory
 ```
 
 **Interactive mode:**
 ```bash
-ai-audio-detector --interactive
+aiaa --interactive
 ```
 
 ### Predicting Single Files
 
 **Interactive mode:**
 ```bash
-ai-audio-detector --interactive
+aiaa --interactive
 # Choose option 2 and enter the path to your audio file
 ```
 
 **Direct command:**
 ```bash
-ai-audio-detector --predict-file path/to/audio.wav
+aiaa --predict-file path/to/audio.wav
 ```
 
 ### Batch Prediction
 
 **Interactive mode:**
 ```bash
-ai-audio-detector --interactive
+aiaa --interactive
 # Choose option 3 and enter the directory path
 ```
 
 **Direct command:**
 ```bash
-ai-audio-detector --predict-batch path/to/audio/directory
+aiaa --predict-batch path/to/audio/directory
 ```
 
 ## Advanced Usage
@@ -133,7 +133,7 @@ ai-audio-detector --predict-batch path/to/audio/directory
 ### Programmatic Usage
 
 ```python
-from ai_audio_detector import AIAudioDetector
+from aiaa import AIAudioDetector
 from pathlib import Path
 
 # Initialize detector
@@ -240,7 +240,7 @@ Modify `config.yaml` to customize:
 
 ## Output Files
 
-- `models/ai_audio_detector.joblib` - Trained models and metadata
+- `models/aiaa.joblib` - Trained models and metadata
 - `training_results.csv` - Detailed training data and features
 - `ai_detection_analysis.png` - Visualization plots
 - `spectrograms/` - Generated spectrogram images
@@ -284,10 +284,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 If you use this work in your research, please cite:
 
 ```bibtex
-@software{ai_audio_detector,
-  title={AI Audio Detector: Machine Learning System for Detecting AI-Generated Audio},
+@software{aiaa,
+  title={AIAA: AI Audio Authenticity - Machine Learning System for Detecting AI-Generated Audio},
   author={Alex Price},
   year={2025},
-  url={https://github.com/yourusername/ai-audio-detector}
+  url={https://github.com/ajprice16/AI_Audio_Detection}
 }
 ```

@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 def check_model_file() -> None:
-    model_file = Path("models/ai_audio_detector.joblib")
+    model_file = Path("models/aiaa.joblib")
 
     if not model_file.exists():
         print(f"Model file does not exist: {model_file}")

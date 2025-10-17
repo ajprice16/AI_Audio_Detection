@@ -1,5 +1,5 @@
 """
-Performance benchmarks for AI Audio Detector
+Performance benchmarks for AIAA: AI Audio Authenticity
 """
 
 import time
@@ -35,7 +35,7 @@ except ImportError:
         return func
 
 
-from ai_audio_detector import AIAudioDetector, AudioAnalyzer
+from aiaa import AIAudioDetector, AudioAnalyzer
 
 
 class BenchmarkRunner:

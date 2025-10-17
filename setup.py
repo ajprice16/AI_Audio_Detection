@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Setup script for AI Audio Detector
+Setup script for AIAA: AI Audio Authenticity
 """
 
 from setuptools import setup, find_packages
@@ -29,11 +29,11 @@ else:
     ]
 
 setup(
-    name="ai-audio-detector",
+    name="aiaa",
     version="1.1.0",
     author="Alex Price",
     author_email="ajprice@mail.wlu.edu",
-    description="Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
+    description="AIAA: AI Audio Authenticity - Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/ajprice16/AI_Audio_Detection",
@@ -57,10 +57,10 @@ setup(
     install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "ai-audio-detector=ai_audio_detector:main",
+            "aiaa=aiaa:main",
         ],
     },
-    keywords="ai detection audio machine-learning benford-law audio-analysis",
+    keywords="ai detection audio machine-learning benford-law audio-analysis authenticity",
     project_urls={
         "Bug Reports": "https://github.com/ajprice16/AI_Audio_Detection/issues",
         "Source": "https://github.com/ajprice16/AI_Audio_Detection",
