@@ -160,6 +160,7 @@ docs/build/
 
 # CI/CD internal documentation
 .github/CI_OPTIMIZATION.md
+.github/JOSS_COMPLIANCE.md
 
 # IDE
 .vscode/
