@@ -7,13 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2025-10-17
+
+### Added
+- Comprehensive Copilot instructions for AI coding agents
+- JOSS compliance verification documentation
+- CI/CD optimization documentation
+
+### Changed
+- Optimized CI/CD pipeline with enhanced pip caching (30-40% faster)
+- Updated pre-commit hooks to check aiaa/ directory only
+- Removed PyPI publishing job (package available as ai-audio-detector on PyPI)
+
+### Fixed
+- Type annotation for frequencies list in audio_analyzer.py
+- Pre-commit hooks now correctly target aiaa/ instead of old ai_audio_detector/
+- CI dependency installation now includes editable package install for type checking
+
+### Removed
+- Old ai_audio_detector/ workspace directory
+- PyPI publishing workflow (to avoid naming conflicts)
+
+## [1.1.0] - 2025-8-1
+
 ### Changed
 - Rebranded package from "ai-audio-detector" to "aiaa" (AIAA: AI Audio Authenticity)
 - Updated all documentation, examples, and code references to reflect new branding
 - Changed console command from `ai-audio-detector` to `aiaa`
 - Updated model filename from `ai_audio_detector.joblib` to `aiaa.joblib`
-
-## [1.1.0] - 2025-8-1
 
 ### Added
 - JOSS Journal submission compliance and information

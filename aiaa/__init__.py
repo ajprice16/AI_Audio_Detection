@@ -4,7 +4,7 @@ Trains Random Forest, Gradient Boosting, SGD, and Passive Aggressive classifiers
 Returns highest confidence prediction with detailed feature analysis.
 """
 
-__version__ = "1.1.0"
+__version__ = "1.2.1"
 
 # Import main classes and functions
 from .config import load_config

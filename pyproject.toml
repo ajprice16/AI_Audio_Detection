@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aiaa"
-version = "1.1.0"
+version = "1.2.1"
 description = "AIAA: AI Audio Authenticity - Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features"
 readme = "README.md"
 license = {text = "MIT"}

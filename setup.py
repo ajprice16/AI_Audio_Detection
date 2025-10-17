@@ -30,7 +30,7 @@ else:
 
 setup(
     name="aiaa",
-    version="1.1.0",
+    version="1.2.1",
     author="Alex Price",
     author_email="ajprice@mail.wlu.edu",
     description="AIAA: AI Audio Authenticity - Machine learning system for detecting AI-generated audio using Benford's Law and advanced spectral features",
