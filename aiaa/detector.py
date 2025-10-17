@@ -2,7 +2,7 @@
 Core AIAA: AI Audio Authenticity class and related utilities.
 """
 
-from typing import Dict, List, Any, Optional, Tuple, Union, cast
+from typing import Dict, List, Any, Optional, Tuple, Union
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -17,7 +17,7 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import SGDClassifier, PassiveAggressiveClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score
 
 from .config import load_config
 from .audio_analyzer import AudioAnalyzer
