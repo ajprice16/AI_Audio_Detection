@@ -44,17 +44,23 @@ jobs:
     - name: Cache pip dependencies
       uses: actions/cache@v4
       with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        path: |
+          ~/.cache/pip
+          ~/.cache/uv
+        key: ${{ runner.os }}-python-${{ matrix.python-version }}-pip-${{ hashFiles('**/requirements*.txt', '**/pyproject.toml') }}
         restore-keys: |
-          ${{ runner.os }}-pip-
+          ${{ runner.os }}-python-${{ matrix.python-version }}-pip-
+          ${{ runner.os }}-python-
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install --upgrade pip setuptools wheel
+        # Install only necessary dev dependencies for testing
         pip install -r requirements.txt
-        pip install -r requirements-dev.txt
-        pip install types-PyYAML types-requests
+        pip install pytest pytest-cov pytest-mock pytest-xdist flake8 mypy bandit types-PyYAML types-requests
+      env:
+        PIP_DISABLE_PIP_VERSION_CHECK: 1
+        PIP_NO_CACHE_DIR: 0
 
     - name: Lint with flake8
       run: |
@@ -89,9 +95,17 @@ jobs:
       with:
         python-version: "3.9"
 
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: security-${{ runner.os }}-pip-bandit
+        restore-keys: |
+          security-${{ runner.os }}-pip-
+
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install --upgrade pip wheel
         pip install bandit safety types-PyYAML
 
     - name: Run bandit security scan
@@ -128,9 +142,17 @@ jobs:
       with:
         python-version: "3.9"
 
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: build-${{ runner.os }}-pip-build
+        restore-keys: |
+          build-${{ runner.os }}-pip-
+
     - name: Install build dependencies
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install --upgrade pip wheel
         pip install build twine
 
     - name: Build package
@@ -160,13 +182,25 @@ jobs:
       with:
         python-version: "3.9"
 
-    - name: Install dependencies
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: perf-${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          perf-${{ runner.os }}-pip-
+          ${{ runner.os }}-python-3.9-pip-
+
+    - name: Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y libsndfile1 ffmpeg
-        python -m pip install --upgrade pip
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
         pip install -r requirements.txt
-        pip install -r requirements-dev.txt
+        pip install pytest soundfile memory-profiler
 
     - name: Run performance benchmarks
       run: |
