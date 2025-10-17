@@ -19,6 +19,8 @@ repos:
     hooks:
       - id: black
         language_version: python3
+        files: ^aiaa/
+        exclude: ^(ai_audio_detector/|\.venv/|venv/)
 
   - repo: https://github.com/pycqa/flake8
     rev: 6.0.0
@@ -26,6 +28,8 @@ repos:
       - id: flake8
         additional_dependencies: [flake8-docstrings, flake8-import-order]
         args: [--max-line-length=127, --max-complexity=10]
+        files: ^aiaa/
+        exclude: ^(ai_audio_detector/|\.venv/|venv/)
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.3.0
@@ -33,6 +37,8 @@ repos:
       - id: mypy
         additional_dependencies: [types-PyYAML, types-requests]
         args: [--config-file=pyproject.toml]
+        files: ^aiaa/
+        exclude: ^(ai_audio_detector/|tests/|\.venv/|venv/)
 
   - repo: https://github.com/pycqa/bandit
     rev: 1.7.5

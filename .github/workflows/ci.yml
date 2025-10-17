@@ -58,6 +58,8 @@ jobs:
         # Install only necessary dev dependencies for testing
         pip install -r requirements.txt
         pip install pytest pytest-cov pytest-mock pytest-xdist flake8 mypy bandit types-PyYAML types-requests
+        # Install package in editable mode for imports to work
+        pip install -e .
       env:
         PIP_DISABLE_PIP_VERSION_CHECK: 1
         PIP_NO_CACHE_DIR: 0
