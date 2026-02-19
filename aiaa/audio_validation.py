@@ -87,7 +87,7 @@ def validate_batch_audio_files(
     directory: Path,
     supported_formats: List[str],
     max_duration: float = 3600.0,
-) -> Tuple[List[Path], List[Tuple[Optional[Path], str]]]:
+) -> Tuple[List[Path], List[Tuple[Path, str]]]:
     """
     Validate all audio files in a directory.
 
