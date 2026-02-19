@@ -76,7 +76,8 @@ def get_audio_sample_rate(file_path: Path) -> Optional[int]:
         Returns None gracefully on error rather than raising exception
     """
     try:
-        return librosa.get_samplerate(str(file_path))
+        sr = librosa.get_samplerate(str(file_path))
+        return int(sr) if sr is not None else None
     except Exception as e:
         logger.warning(f"Could not get sample rate for {file_path}: {e}")
         return None

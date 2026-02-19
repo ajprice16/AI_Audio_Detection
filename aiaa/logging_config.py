@@ -53,7 +53,12 @@ def setup_logging(
 
     # File handler (if log file specified)
     if log_file or log_dir:
-        file_path = Path(log_file) if log_file else (log_dir / "aiaa.log")
+        if log_file:
+            file_path = Path(log_file)
+        elif log_dir:
+            file_path = log_dir / "aiaa.log"
+        else:
+            file_path = Path("aiaa.log")
         file_path.parent.mkdir(parents=True, exist_ok=True)
 
         try:
