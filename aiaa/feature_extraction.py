@@ -18,10 +18,22 @@ class AudioFeatureExtractor:
         Extract Benford's Law features from frequency data.
 
         Args:
-            frequencies: List of frequency values.
+            frequencies: List of frequency values (Hz).
 
         Returns:
-            Dictionary of Benford's Law features.
+            Dictionary with keys:
+            - chi2_p, chi2_stat: Chi-square test p-value and statistic
+            - ks_p, ks_stat: Kolmogorov-Smirnov test p-value and statistic
+            - mad: Mean absolute deviation from Benford's Law
+            - max_deviation: Maximum single deviation
+            - entropy: Information entropy of digit distribution
+
+            Returns empty dict {} if fewer than 10 frequencies provided.
+
+        Note:
+            Implements Benford's Law analysis to distinguish AI from human audio.
+            Tests if first-digit distribution of peak frequencies matches
+            expected distribution from Benford's Law.
         """
         try:
             if not frequencies or len(frequencies) < 10:
@@ -114,11 +126,21 @@ class AudioFeatureExtractor:
         Extract spectral features from audio.
 
         Args:
-            y: Audio signal.
-            sr: Sample rate.
+            y: Audio signal (numpy array).
+            sr: Sample rate in Hz.
 
         Returns:
-            Dictionary of spectral features.
+            Dictionary with keys:
+            - spectral_centroid, spectral_bandwidth, spectral_rolloff: Basic spectral features
+            - mfcc_0 to mfcc_12: Mean Mel-frequency cepstral coefficients
+            - mfcc_0_std to mfcc_12_std: Standard deviation of MFCCs
+            - chroma_mean, chroma_std: Chroma feature statistics
+            - spectral_contrast: Mean spectral contrast
+
+            Returns empty dict {} on error.
+
+        Note:
+            All features are float values. Returns empty dict on extraction failure.
         """
         try:
             features: Dict[str, float] = {}
@@ -154,11 +176,21 @@ class AudioFeatureExtractor:
         Extract temporal features from audio.
 
         Args:
-            y: Audio signal.
-            sr: Sample rate.
+            y: Audio signal (numpy array).
+            sr: Sample rate in Hz.
 
         Returns:
-            Dictionary of temporal features.
+            Dictionary with keys:
+            - temporal_rms_mean, temporal_rms_std: RMS energy statistics
+            - temporal_zcr_mean, temporal_zcr_std: Zero-crossing rate statistics
+            - temporal_tempo: Estimated tempo in BPM (0.0 on error)
+            - temporal_spectral_flatness: Mean spectral flatness
+            - temporal_dynamic_range: Max amplitude - min amplitude
+
+            Returns empty dict {} on error.
+
+        Note:
+            All features are float values. Dynamic range is non-negative.
         """
         try:
             features: Dict[str, float] = {}
@@ -204,11 +236,22 @@ class AudioFeatureExtractor:
         Extract compression-related features from audio.
 
         Args:
-            y: Audio signal.
-            sr: Sample rate.
+            y: Audio signal (numpy array).
+            sr: Sample rate in Hz.
 
         Returns:
-            Dictionary of compression features.
+            Dictionary with keys:
+            - compression_estimated_bit_depth: Estimated bit depth (log2 scale)
+            - compression_clipping_ratio: Ratio of clipped samples (0.0-1.0)
+            - compression_dc_offset: Mean offset in signal
+            - compression_high_freq_ratio: Power ratio above sr/4 (0.0-1.0)
+
+            Returns empty dict {} on error.
+
+        Note:
+            Bit depth is estimated from unique values in signal.
+            Clipping threshold is 0.95 of maximum amplitude.
+            High frequency is defined as > sample_rate/4.
         """
         try:
             features: Dict[str, float] = {}

@@ -10,6 +10,7 @@ import joblib
 from datetime import datetime
 from tqdm import tqdm
 import warnings
+import logging
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 # ML imports
@@ -23,6 +24,7 @@ from .config import load_config
 from .audio_analyzer import AudioAnalyzer
 
 warnings.filterwarnings("ignore", category=UserWarning)
+logger = logging.getLogger(__name__)
 
 
 def process_single_audio_file(args: Tuple) -> Dict[str, Any]:
@@ -126,7 +128,7 @@ class AIAudioDetector:
         """
         directory = Path(directory)
         if not directory.exists():
-            print(f"Directory does not exist: {directory}")
+            logger.error(f"Directory does not exist: {directory}")
             return []
 
         # Find audio files
@@ -137,10 +139,10 @@ class AIAudioDetector:
             audio_files.extend(directory.rglob(f"*{ext}"))
 
         if not audio_files:
-            print(f"No audio files found in {directory}")
+            logger.warning(f"No audio files found in {directory}")
             return []
 
-        print(f"Processing {len(audio_files)} files from {directory}")
+        logger.info(f"Found {len(audio_files)} audio files in {directory}")
 
         # Process files
         features_list = []
@@ -151,6 +153,7 @@ class AIAudioDetector:
             max_workers = self.config["processing"]["max_workers"]
             args_list = [(file_path, is_ai_directory, self.config) for file_path in audio_files]
 
+            logger.debug(f"Using multiprocessing with {max_workers} workers")
             with ProcessPoolExecutor(max_workers=max_workers) as executor:
                 with tqdm(total=len(audio_files), desc="Extracting features") as pbar:
                     futures = {executor.submit(process_single_audio_file, args): args[0] for args in args_list}
@@ -160,20 +163,23 @@ class AIAudioDetector:
                             features = future.result()
                             if "error" not in features:
                                 features_list.append(features)
+                            else:
+                                logger.warning(f"Failed to extract features: {features.get('error')}")
                         except Exception as e:
                             file_path = futures[future]
-                            print(f"Error processing {file_path}: {e}")
+                            logger.error(f"Error processing {file_path}: {e}", exc_info=True)
                         finally:
                             pbar.update(1)
         else:
             # Process sequentially for small batches
+            logger.debug("Using sequential processing")
             for file_path in tqdm(audio_files, desc="Extracting features"):
                 features = self.analyzer.analyze_audio_file(file_path)
                 features["is_ai"] = is_ai_directory
                 if "error" not in features:
                     features_list.append(features)
 
-        print(f"Successfully processed {len(features_list)} files")
+        logger.info(f"Successfully processed {len(features_list)} out of {len(audio_files)} files")
         return features_list
 
     def train_models(self, df_results: pd.DataFrame) -> Dict[str, Dict[str, Any]]:
@@ -185,8 +191,11 @@ class AIAudioDetector:
 
         Returns:
             Dictionary containing training results for each model.
+
+        Raises:
+            ValueError: If no feature columns found for training.
         """
-        print("Training models...")
+        logger.info("Starting model training...")
 
         # Prepare feature matrix
         feature_cols = [
@@ -194,14 +203,18 @@ class AIAudioDetector:
         ]
 
         if not feature_cols:
+            logger.error("No feature columns found for training")
             raise ValueError("No feature columns found for training")
 
         self.feature_columns = feature_cols
+        logger.debug(f"Using {len(feature_cols)} features for training")
+
         X = df_results[feature_cols].fillna(0)
         y = df_results["is_ai"].astype(int)
 
         # Split data
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+        logger.info(f"Data split: train={len(X_train)}, test={len(X_test)}")
 
         # Scale features
         X_train_scaled = self.scaler.fit_transform(X_train)
@@ -221,7 +234,7 @@ class AIAudioDetector:
         training_results = {}
 
         for name, model in self.models.items():
-            print(f"Training {name}...")
+            logger.info(f"Training {name}...")
 
             try:
                 model.fit(X_train_scaled, y_train)
@@ -237,13 +250,14 @@ class AIAudioDetector:
                     "test_samples": len(X_test),
                 }
 
-                print(f"{name} accuracy: {accuracy:.4f}")
+                logger.info(f"{name} accuracy: {accuracy:.4f}")
 
             except Exception as e:
-                print(f"Error training {name}: {e}")
+                logger.error(f"Error training {name}: {e}", exc_info=True)
                 training_results[name] = {"error": str(e)}
 
         self.is_trained = True
+        logger.info("Model training completed")
 
         # Add to training history
         ai_count = df_results["is_ai"].sum()
@@ -270,6 +284,7 @@ class AIAudioDetector:
         results_file = self.results_dir / "training_results.csv"
         results_df = pd.DataFrame(training_results).T
         results_df.to_csv(results_file)
+        logger.info(f"Training results saved to {results_file}")
 
         return training_results
 
@@ -445,11 +460,11 @@ class AIAudioDetector:
 
             model_file = self.models_dir / "aiaa.joblib"
             joblib.dump(model_data, model_file)
-            print(f"Models saved to {model_file}")
+            logger.info(f"Models saved successfully to {model_file}")
             return True
 
         except Exception as e:
-            print(f"Error saving models: {e}")
+            logger.error(f"Error saving models: {e}", exc_info=True)
             return False
 
     def load_models(self) -> bool:
@@ -462,14 +477,17 @@ class AIAudioDetector:
         try:
             model_file = self.models_dir / "aiaa.joblib"
             if not model_file.exists():
+                logger.debug(f"No model file found at {model_file}")
                 return False
 
+            logger.info(f"Loading models from {model_file}")
             model_data = joblib.load(model_file)
 
             # Handle both old and new model file formats
             if "models" in model_data:
                 # New format
                 self.models = model_data["models"]
+                logger.debug(f"Loaded models: {list(self.models.keys())}")
             else:
                 # Old format with separate incremental and batch models
                 self.models = {}
@@ -477,10 +495,12 @@ class AIAudioDetector:
                     self.models.update(model_data["incremental_models"])
                 if "batch_models" in model_data:
                     self.models.update(model_data["batch_models"])
+                logger.debug(f"Loaded models from legacy format: {list(self.models.keys())}")
 
             self.scaler = model_data["scaler"]
             self.feature_columns = model_data["feature_columns"]
             self.is_trained = True  # Set to True if we loaded models successfully
+            logger.info(f"Models loaded ({len(self.feature_columns)} features)")
 
             # Load training history if available
             if "training_history" in model_data:
@@ -491,7 +511,7 @@ class AIAudioDetector:
             return True
 
         except Exception as e:
-            print(f"Error loading models: {e}")
+            logger.error(f"Error loading models: {e}", exc_info=True)
             return False
 
     def update_with_new_data(

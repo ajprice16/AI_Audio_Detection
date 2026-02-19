@@ -4,11 +4,15 @@ Command-line interface for AIAA: AI Audio Authenticity.
 
 import argparse
 import sys
+import logging
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 
 from .detector import AIAudioDetector
 from .config import load_config
+from .logging_config import setup_logging, get_logger
+
+logger = get_logger(__name__)
 
 
 def run_interactive_mode(detector: AIAudioDetector) -> None:
@@ -262,6 +266,11 @@ Examples:
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
+
+    # Initialize logging based on verbosity
+    log_level = "DEBUG" if args.verbose else "INFO"
+    setup_logging(log_level=log_level)
+    logger.info(f"AIAA initialized with log level: {log_level}")
 
     try:
         # Initialize detector

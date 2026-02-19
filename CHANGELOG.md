@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-02-19
+
+### Added
+- Centralized logging system with `logging_config.py` module
+  - `setup_logging()` for configurable logging with level/file support
+  - `get_logger()` for module-level logger creation
+  - Rotating file handler (10MB max, 5 backups) for persistent logs
+  - Support for DEBUG/INFO/WARNING/ERROR/CRITICAL levels
+  - CLI `--verbose` flag enables DEBUG level output
+- Audio file validation utilities in `audio_validation.py`
+  - `validate_audio_file()` pre-validates before expensive processing
+  - `validate_batch_audio_files()` validates entire directories
+  - `get_audio_sample_rate()` safe sample rate detection
+  - AudioValidationError exception class
+- Configuration validation with detailed logging
+  - `validate_config()` verifies required config structure
+  - Logs missing keys with helpful context
+
+### Changed
+- Replaced 30+ print() statements with structured logging throughout codebase
+- Enhanced docstrings with complete return value documentation
+- Type hints upgraded (e.g., `List[Path]` instead of `list`, `List[str]` for formats)
+- Detector logs training progress, model persistence, and predictions
+- Audio analyzer logs validation and feature extraction details
+- Configuration loading now validates structure and warns about issues
+
+### Fixed
+- Removed unused `validate_audio_file` import from detector.py
+- Corrected `validate_batch_audio_files()` return type to `Tuple[List[Path], List[Tuple[Optional[Path], str]]]`
+- Added missing `List` import to audio_validation.py for proper typing
+- Graceful error handling for invalid audio files (returns error dict vs crashing)
+- Configuration errors now logged with specific details
+
+### Improved
+- Production-ready logging with persistent rotating file handlers
+- Early detection of audio issues before expensive feature extraction
+- Better debugging with timestamps, function names, line numbers
+- Batch processing gracefully skips invalid files instead of failing completely
+- CLI provides detailed feedback with DEBUG mode support
+
 ## [1.2.1] - 2025-10-17
 
 ### Added

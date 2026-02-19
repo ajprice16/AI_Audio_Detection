@@ -8,12 +8,15 @@ import librosa
 from pathlib import Path
 import matplotlib.pyplot as plt
 import librosa.display
+import logging
 
 from .feature_extraction import AudioFeatureExtractor
 from .config import load_config
+from .audio_validation import validate_audio_file
 
 # Load configuration
 config = load_config()
+logger = logging.getLogger(__name__)
 
 
 class AudioAnalyzer:
@@ -39,8 +42,19 @@ class AudioAnalyzer:
         file_path = Path(file_path)
 
         try:
+            # Validate audio file first
+            is_valid, message = validate_audio_file(file_path)
+            if not is_valid:
+                logger.warning(f"Audio validation failed for {file_path}: {message}")
+                return {
+                    "filename": file_path.name,
+                    "full_path": str(file_path),
+                    "error": message,
+                }
+
             # Load audio
             y, sr = librosa.load(file_path, sr=config.get("audio", {}).get("default_sample_rate"))
+            logger.debug(f"Loaded audio: {file_path} (sr={sr}, duration={len(y)/sr:.2f}s)")
 
             # Initialize features dictionary
             features = {
@@ -83,7 +97,7 @@ class AudioAnalyzer:
             return features
 
         except Exception as e:
-            print(f"Error analyzing {file_path}: {e}")
+            logger.error(f"Error analyzing {file_path}: {e}", exc_info=True)
             return {
                 "filename": file_path.name,
                 "full_path": str(file_path),
@@ -133,7 +147,7 @@ class AudioAnalyzer:
             return True
 
         except Exception as e:
-            print(f"Error generating spectrogram for {file_path}: {e}")
+            logger.error(f"Error generating spectrogram for {file_path}: {e}", exc_info=True)
             plt.close()  # Ensure plot is closed even on error
             return False
 
@@ -193,6 +207,6 @@ class AudioAnalyzer:
             return True
 
         except Exception as e:
-            print(f"Error comparing spectrograms: {e}")
+            logger.error(f"Error comparing spectrograms: {e}", exc_info=True)
             plt.close()  # Ensure plot is closed even on error
             return False
