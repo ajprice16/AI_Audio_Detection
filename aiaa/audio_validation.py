@@ -87,7 +87,7 @@ def validate_batch_audio_files(
     directory: Path,
     supported_formats: List[str],
     max_duration: float = 3600.0,
-) -> Tuple[List[Path], List[Tuple[Path, str]]]:
+) -> Tuple[List[Path], List[Tuple[Optional[Path], str]]]:
     """
     Validate all audio files in a directory.
 
@@ -105,8 +105,8 @@ def validate_batch_audio_files(
         Returns separate lists rather than raising on first error.
         Invalid files list contains (Path, message) tuples where message describes the issue.
     """
-    valid_files = []
-    invalid_files = []
+    valid_files: List[Path] = []
+    invalid_files: List[Tuple[Optional[Path], str]] = []
 
     # Find audio files
     if not directory.exists():
