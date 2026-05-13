@@ -21,7 +21,7 @@ from aiaa import AIAudioDetector, AudioAnalyzer, AudioFeatureExtractor
 def generate_synthetic_audio(
     duration: float = 5.0, sample_rate: int = 22050, frequency: float = 440
 ) -> Tuple[np.ndarray, int]:
-    """Generate synthetic audio for testing purposes."""
+    # Generate synthetic audio for testing purposes....
     t = np.linspace(0, duration, int(sample_rate * duration))
     # Create a simple sine wave with some noise to simulate real audio
     audio = 0.5 * np.sin(2 * np.pi * frequency * t) + 0.1 * np.random.randn(len(t))
@@ -29,7 +29,7 @@ def generate_synthetic_audio(
 
 
 def demonstrate_feature_extraction() -> None:
-    """Demonstrate audio feature extraction capabilities."""
+    # Demonstrate audio feature extraction capabilities....
     print("=== Audio Feature Extraction Demo ===")
 
     # Generate test audio
@@ -59,7 +59,7 @@ def demonstrate_feature_extraction() -> None:
 
 
 def demonstrate_benford_analysis() -> None:
-    """Demonstrate Benford's Law analysis on audio data."""
+    # Demonstrate Benford's Law analysis on audio datase...
     print("\n=== Benford's Law Analysis Demo ===")
 
     # Generate test audio
@@ -87,7 +87,7 @@ def demonstrate_benford_analysis() -> None:
 
 
 def demonstrate_ensemble_classification() -> None:
-    """Demonstrate ensemble classification with multiple models."""
+    # Demonstrate ensemble classification with multiple ...
     print("\n=== Ensemble Classification Demo ===")
 
     # Initialize detector
@@ -115,20 +115,20 @@ def demonstrate_ensemble_classification() -> None:
         print(f"Testing ensemble classification on {len(test_files)} audio samples...")
 
         for i, audio_file in enumerate(test_files):
-            result = detector.predict_single_file(audio_file)
+            output = detector.predict_single_file(audio_file)
 
-            if result:
+            if output:
                 print(f"Sample {i+1}:")
                 # Correctly handle boolean prediction values
-                prediction = result.get("prediction", "Unknown")
+                prediction = output.get("prediction", "Unknown")
                 print(f"  Prediction: {prediction}")
-                print(f"  Confidence: {result.get('confidence', 0):.3f}")
+                print(f"  Confidence: {output.get('confidence', 0):.3f}")
 
                 # Show model-specific predictions if available
-                if "model_predictions" in result:
+                if "model_predictions" in output:
                     print("  Individual model predictions:")
-                    for model_name, pred in result["model_predictions"].items():
-                        confidence = result.get("model_confidences", {}).get(model_name, 0)
+                    for model_name, pred in output["model_predictions"].items():
+                        confidence = output.get("model_confidences", {}).get(model_name, 0)
                         pred_text = "AI" if pred else "Human"
                         print(f"    {model_name}: {pred_text} ({confidence:.3f})")
             else:
@@ -139,12 +139,12 @@ def demonstrate_ensemble_classification() -> None:
         for tmp_file in test_files:
             try:
                 os.unlink(tmp_file)
-            except:
+            except (ValueError, KeyError):
                 pass
 
 
 def demonstrate_batch_processing() -> None:
-    """Demonstrate batch processing capabilities."""
+    # Demonstrate batch processing capabilities.
     print("\n=== Batch Processing Demo ===")
 
     detector = AIAudioDetector()
@@ -170,18 +170,18 @@ def demonstrate_batch_processing() -> None:
 
         if results is not None and len(results) > 0:
             print("Batch processing results:")
-            for idx, result in enumerate(results):
-                # Use prediction result from the dictionary
-                prediction = result.get("prediction", "Unknown")
-                confidence = result.get("confidence", 0)
-                filename = result.get("filename", f"file_{idx}")
+            for idx, output in enumerate(results):
+                # Use prediction output from the dictionary
+                prediction = output.get("prediction", "Unknown")
+                confidence = output.get("confidence", 0)
+                filename = output.get("filename", f"file_{idx}")
                 print(f"  {filename}: {prediction} (confidence: {confidence:.3f})")
         else:
             print("Batch processing completed with no results")
 
 
 def performance_benchmark() -> None:
-    """Simple performance benchmark."""
+    # Simple performance benchmark.
     print("\n=== Performance Benchmark ===")
 
     import time
@@ -201,7 +201,7 @@ def performance_benchmark() -> None:
         try:
             # Time the analysis
             start_time = time.time()
-            result = detector.predict_single_file(tmp.name)
+            output = detector.predict_single_file(tmp.name)
             end_time = time.time()
 
             analysis_time = end_time - start_time
@@ -216,7 +216,7 @@ def performance_benchmark() -> None:
 
 
 def main() -> int:
-    """Run all demonstrations."""
+    # Run all demonstrations.
     print("AIAA: AI Audio Authenticity - JOSS Paper Examples")
     print("=" * 50)
 

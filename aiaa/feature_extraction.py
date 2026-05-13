@@ -4,18 +4,23 @@ Audio feature extraction utilities for AIAA: AI Audio Authenticity.
 
 from typing import Dict, List
 import numpy as np
+
+from .runtime import configure_numba_cache
+
+configure_numba_cache()
+
 import librosa
 from scipy import stats
 from scipy.stats import ks_2samp
 
 
 class AudioFeatureExtractor:
-    """Audio feature extraction utilities."""
+    # Audio feature extraction utilities.
 
     @staticmethod
     def extract_benford_features(frequencies: List[float]) -> Dict[str, float]:
         """
-        Extract Benford's Law features from frequency data.
+        Extract Benford's Law features from frequency dataset.
 
         Args:
             frequencies: List of frequency values (Hz).
@@ -86,7 +91,7 @@ class AudioFeatureExtractor:
                 for digit, count in enumerate(observed_counts, 1):
                     empirical_data.extend([digit] * count)
 
-                # Expected data based on Benford's law
+                # Expected dataset based on Benford's law
                 expected_data = []
                 for digit in range(1, 10):
                     count = int(total_count * expected_benford[digit - 1])
@@ -117,7 +122,7 @@ class AudioFeatureExtractor:
 
             return features
 
-        except Exception:
+        except (ValueError, KeyError, TypeError):
             return {}
 
     @staticmethod
@@ -167,7 +172,7 @@ class AudioFeatureExtractor:
 
             return features
 
-        except Exception:
+        except (ValueError, KeyError, TypeError):
             return {}
 
     @staticmethod
@@ -227,7 +232,7 @@ class AudioFeatureExtractor:
 
             return features
 
-        except Exception:
+        except (ValueError, KeyError, TypeError):
             return {}
 
     @staticmethod
@@ -254,11 +259,13 @@ class AudioFeatureExtractor:
             High frequency is defined as > sample_rate/4.
         """
         try:
+            if len(y) == 0:
+                return {}
+
             features: Dict[str, float] = {}
 
             # Bit depth estimation (based on quantization levels)
             unique_values = len(np.unique(y))
-            max_possible = 2**16  # Assume 16-bit as reference
             features["compression_estimated_bit_depth"] = float(np.log2(unique_values) if unique_values > 1 else 1.0)
 
             # Clipping detection
@@ -278,5 +285,5 @@ class AudioFeatureExtractor:
 
             return features
 
-        except Exception:
+        except (ValueError, KeyError, TypeError):
             return {}

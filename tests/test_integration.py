@@ -13,10 +13,10 @@ from aiaa import AIAudioDetector, AudioAnalyzer
 
 
 class TestIntegration(unittest.TestCase):
-    """Integration tests for the complete system"""
+    # Integration tests for the complete system
 
     def setUp(self) -> None:
-        """Set up test fixtures"""
+        # Set up test fixtures
         # Create temporary directory structure
         self.temp_dir = tempfile.mkdtemp()
         self.temp_path = Path(self.temp_dir)
@@ -34,11 +34,11 @@ class TestIntegration(unittest.TestCase):
         self.detector = AIAudioDetector(base_dir=self.temp_dir)
 
     def tearDown(self) -> None:
-        """Clean up test fixtures"""
+        # Clean up test fixtures
         shutil.rmtree(self.temp_dir)
 
     def create_sample_audio_files(self) -> None:
-        """Create sample audio files for testing"""
+        # Create sample audio files for testing
         sample_rate = 22050
         duration = 2.0  # 2 seconds
         t = np.linspace(0, duration, int(sample_rate * duration))
@@ -76,7 +76,7 @@ class TestIntegration(unittest.TestCase):
             sf.write(self.human_audio_dir / f"human_sample_{i}.wav", audio, sample_rate)
 
     def test_end_to_end_workflow(self) -> None:
-        """Test the complete workflow from training to prediction"""
+        # Test the complete workflow from training to predic...
         # Step 1: Extract features from directories
         ai_features = self.detector.extract_features_from_directory(self.ai_audio_dir, is_ai_directory=True)
         human_features = self.detector.extract_features_from_directory(self.human_audio_dir, is_ai_directory=False)
@@ -132,7 +132,7 @@ class TestIntegration(unittest.TestCase):
             self.assertIsInstance(update_results, dict)
 
     def test_audio_analyzer_integration(self) -> None:
-        """Test AudioAnalyzer integration with real audio files"""
+        # Test AudioAnalyzer integration with real audio fil...
         analyzer = AudioAnalyzer()
 
         # Test analysis of a sample file
@@ -158,7 +158,7 @@ class TestIntegration(unittest.TestCase):
         self.assertGreater(len(compression_features), 0)
 
     def test_spectrogram_generation(self) -> None:
-        """Test spectrogram generation functionality"""
+        # Test spectrogram generation functionality
         analyzer = AudioAnalyzer()
         test_file = list(self.ai_audio_dir.glob("*.wav"))[0]
 
@@ -169,8 +169,8 @@ class TestIntegration(unittest.TestCase):
         self.assertTrue(spectrogram_success)
 
     def test_model_persistence_integration(self) -> None:
-        """Test that models can be saved, loaded, and used for prediction"""
-        # Train models with sample data
+        # Test that models can be saved, loaded, and used fo...
+        # Train models with sample dataset
         ai_features = self.detector.extract_features_from_directory(self.ai_audio_dir, is_ai_directory=True)
         human_features = self.detector.extract_features_from_directory(self.human_audio_dir, is_ai_directory=False)
 

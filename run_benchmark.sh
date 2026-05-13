@@ -6,7 +6,7 @@ echo "AI Audio Detector Benchmark Runner"
 echo "=================================="
 
 # Check if we're in the right directory
-if [[ ! -f "ai_audio_detector/__init__.py" ]]; then
+if [[ ! -f "aiaa/__init__.py" ]]; then
     echo "Error: Please run this script from the AI_Audio project root directory"
     exit 1
 fi

@@ -14,10 +14,10 @@ from aiaa import AIAudioDetector, load_config
 
 
 class TestAIAudioDetector(unittest.TestCase):
-    """Test cases for AIAudioDetector"""
+    # Test cases for AIAudioDetector
 
     def setUp(self) -> None:
-        """Set up test fixtures"""
+        # Set up test fixtures
         # Create temporary directory for tests
         self.temp_dir = tempfile.mkdtemp()
         self.temp_path = Path(self.temp_dir)
@@ -25,7 +25,7 @@ class TestAIAudioDetector(unittest.TestCase):
         # Initialize detector with temporary directory
         self.detector = AIAudioDetector(base_dir=self.temp_dir)
 
-        # Create sample training data
+        # Create sample training dataset
         self.sample_data = pd.DataFrame(
             {
                 "filename": [
@@ -57,23 +57,23 @@ class TestAIAudioDetector(unittest.TestCase):
         )
 
     def tearDown(self) -> None:
-        """Clean up test fixtures"""
+        # Clean up test fixtures
         shutil.rmtree(self.temp_dir)
 
     def test_initialization(self) -> None:
-        """Test detector initialization"""
+        # Test detector initialization
         self.assertIsInstance(self.detector, AIAudioDetector)
         self.assertEqual(self.detector.base_dir, self.temp_path)
         self.assertFalse(self.detector.is_trained)
 
     def test_get_audio_extensions(self) -> None:
-        """Test audio extension retrieval"""
+        # Test audio extension retrieval
         extensions = self.detector.get_audio_extensions()
         expected_extensions = [".wav", ".mp3", ".flac", ".ogg", ".m4a", ".aac"]
         self.assertEqual(extensions, expected_extensions)
 
     def test_train_models(self) -> None:
-        """Test model training"""
+        # Test model training
         results = self.detector.train_models(self.sample_data)
 
         # Check that training was successful
@@ -94,7 +94,7 @@ class TestAIAudioDetector(unittest.TestCase):
             self.assertIn("test_accuracy", results[model_name])
 
     def test_load_config(self) -> None:
-        """Test configuration loading"""
+        # Test configuration loading
         config = load_config()
 
         # Check that config has expected structure
@@ -109,12 +109,12 @@ class TestAIAudioDetector(unittest.TestCase):
         self.assertIn("max_workers", config["processing"])
 
     def test_predict_file_not_trained(self) -> None:
-        """Test prediction when models are not trained"""
-        result = self.detector.predict_single_file("/fake/path.wav")
-        self.assertIn("error", result)
+        # Test prediction when models are not trained
+        output = self.detector.predict_single_file("/fake/path.wav")
+        self.assertIn("error", output)
 
     def test_save_and_load_models(self) -> None:
-        """Test model saving and loading"""
+        # Test model saving and loading
         # Train models first
         self.detector.train_models(self.sample_data)
         original_feature_columns = self.detector.feature_columns.copy()
@@ -131,11 +131,11 @@ class TestAIAudioDetector(unittest.TestCase):
         self.assertEqual(new_detector.feature_columns, original_feature_columns)
 
     def test_update_with_new_data(self) -> None:
-        """Test adaptive model updating"""
+        # Test adaptive model updating
         # Train initial models
         self.detector.train_models(self.sample_data)
 
-        # Create new data for updating
+        # Create new dataset for updating
         new_data = pd.DataFrame(
             {
                 "filename": ["new_file1.wav", "new_file2.wav"],
@@ -162,7 +162,7 @@ class TestAIAudioDetector(unittest.TestCase):
         self.assertGreater(len(self.detector.training_history), 1)
 
     def test_show_data_balance(self) -> None:
-        """Test data balance display"""
+        # Test dataset balance display
         # Train models first to have training history
         self.detector.train_models(self.sample_data)
 
@@ -173,12 +173,12 @@ class TestAIAudioDetector(unittest.TestCase):
             self.fail(f"show_data_balance raised an exception: {e}")
 
     def test_model_persistence_after_update(self) -> None:
-        """Test that models persist correctly after updates"""
+        # Test that models persist correctly after updates...
         # Train initial models
         self.detector.train_models(self.sample_data)
         initial_history_length = len(self.detector.training_history)
 
-        # Create new data
+        # Create new dataset
         new_data = self.sample_data.copy()
         new_data["filename"] = ["new_" + f for f in new_data["filename"]]
 

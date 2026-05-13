@@ -1,6 +1,8 @@
 # AIAA: AI Audio Authenticity
 
-A machine learning system for detecting AI-generated audio using Benford's Law analysis and advanced audio feature extraction. The system employs ensemble learning with adaptive model updating capabilities.
+A machine learning research toolkit for exploring AI-generated audio detection using Benford's Law analysis and advanced audio feature extraction. The system employs ensemble learning with adaptive model updating capabilities.
+
+> **Research status:** The Benford's Law signal used here is an experimental hypothesis, not a validated forensic guarantee. Treat predictions as model outputs that require dataset-specific evaluation before real-world use.
 
 ## Features
 
@@ -68,17 +70,17 @@ brew install libsndfile ffmpeg
 ```bash
 aiaa --interactive
 # or
-aiaa --predict-file path/to/audio.wav
+aiaa --predict path/to/audio.wav
 ```
 
 **If running from source:**
 ```bash
 python -m aiaa --interactive
 # or
-python -m aiaa --predict-file path/to/audio.wav
+python -m aiaa --predict path/to/audio.wav
 ```
 
-3. **Choose option 1** to train new models and follow the prompts.
+3. In interactive mode, use `train <ai_dir> <human_dir>` to train new models.
 
 ### Command Line Usage
 
@@ -89,12 +91,12 @@ aiaa --train --human-dir path/to/human/audio --ai-dir path/to/ai/audio
 
 **Predict single file:**
 ```bash
-aiaa --predict-file path/to/audio.wav
+aiaa --predict path/to/audio.wav
 ```
 
 **Predict batch:**
 ```bash
-aiaa --predict-batch path/to/audio/directory
+aiaa --batch path/to/audio/directory
 ```
 
 **Interactive mode:**
@@ -107,12 +109,12 @@ aiaa --interactive
 **Interactive mode:**
 ```bash
 aiaa --interactive
-# Choose option 2 and enter the path to your audio file
+# Then run: predict path/to/audio.wav
 ```
 
 **Direct command:**
 ```bash
-aiaa --predict-file path/to/audio.wav
+aiaa --predict path/to/audio.wav
 ```
 
 ### Batch Prediction
@@ -120,12 +122,12 @@ aiaa --predict-file path/to/audio.wav
 **Interactive mode:**
 ```bash
 aiaa --interactive
-# Choose option 3 and enter the directory path
+# Then run: batch path/to/audio/directory
 ```
 
 **Direct command:**
 ```bash
-aiaa --predict-batch path/to/audio/directory
+aiaa --batch path/to/audio/directory
 ```
 
 ## Advanced Usage
@@ -135,6 +137,7 @@ aiaa --predict-batch path/to/audio/directory
 ```python
 from aiaa import AIAudioDetector
 from pathlib import Path
+import pandas as pd
 
 # Initialize detector
 detector = AIAudioDetector(base_dir=Path.cwd())
@@ -148,8 +151,8 @@ df_results = pd.DataFrame(all_features)
 training_results = detector.train_models(df_results)
 
 # Make predictions
-result = detector.predict_file("test_audio.wav")
-print(f"Prediction: {'AI' if result['is_ai'] else 'Human'}")
+result = detector.predict_single_file("test_audio.wav")
+print(f"Prediction: {result['prediction']}")
 print(f"Confidence: {result['confidence']:.3f}")
 ```
 
@@ -158,18 +161,9 @@ print(f"Confidence: {result['confidence']:.3f}")
 The system supports adaptive learning to improve accuracy with new data:
 
 ```python
-# Add new AI data
-detector.add_ai_data("new_ai_audio/", retrain_batch_models=True)
-
-# Add new human data
-detector.add_human_data("new_human_audio/", retrain_batch_models=True)
-
-# Add mixed data batch
-directories = [
-    {'path': 'dataset1/', 'is_ai': True},
-    {'path': 'dataset2/', 'is_ai': False}
-]
-detector.add_mixed_data_batch(directories, retrain_batch_models=True)
+new_ai_features = detector.extract_features_from_directory("new_ai_audio/", is_ai_directory=True)
+new_human_features = detector.extract_features_from_directory("new_human_audio/", is_ai_directory=False)
+update_results = detector.update_with_new_data(new_ai_features + new_human_features)
 ```
 
 ## Features Extracted
@@ -213,7 +207,7 @@ The system uses an ensemble of four different models:
    - Random Forest (200 estimators)
    - Gradient Boosting (200 estimators)
 
-All features are standardized using StandardScaler, and final predictions use ensemble averaging.
+All features are standardized using StandardScaler, and final predictions use a confidence-weighted ensemble vote.
 
 ## Configuration
 
@@ -225,24 +219,18 @@ Modify `config.yaml` to customize:
 
 ## Command Line Options
 
-1. **Train new models** - Initial training from audio directories
-2. **Predict single file** - Analyze one audio file
-3. **Predict batch** - Analyze all files in a directory
-4. **Update models** - Adaptive learning with new data
-5. **Add AI data** - Add new AI samples to existing models
-6. **Add Human data** - Add new human samples to existing models
-7. **Batch directories** - Add multiple directories at once
-8. **Training history** - View model training history
-9. **Data balance** - Check AI vs Human data balance
-10. **Create visualizations** - Generate analysis plots
-11. **Generate spectrograms** - Create spectrograms for audio files
-12. **Spectrogram comparison** - Compare AI vs Human spectrograms
+- `--train --ai-dir <dir> --human-dir <dir>` - Initial training from audio directories
+- `--predict <file>` - Analyze one audio file
+- `--batch <dir>` - Analyze all supported audio files in a directory
+- `--update --ai-dir <dir> --human-dir <dir>` - Incrementally update trained models
+- `--interactive` - Run a multi-command session
+- `--spectrogram <file>` - Generate a mel spectrogram
+- `--compare <file1> <file2>` - Generate a side-by-side spectrogram comparison
 
 ## Output Files
 
 - `models/aiaa.joblib` - Trained models and metadata
-- `training_results.csv` - Detailed training data and features
-- `ai_detection_analysis.png` - Visualization plots
+- `results/training_results.csv` - Training metrics for fitted models
 - `spectrograms/` - Generated spectrogram images
 - `spectrogram_comparisons/` - Side-by-side comparisons
 
@@ -254,7 +242,7 @@ Modify `config.yaml` to customize:
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.8+
 - librosa (audio processing)
 - scikit-learn (machine learning)
 - pandas, numpy (data manipulation)

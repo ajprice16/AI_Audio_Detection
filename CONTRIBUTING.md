@@ -65,7 +65,7 @@ Good pull requests include:
 
 ### Prerequisites
 
-- Python 3.7+
+- Python 3.8+
 - Git
 - Audio processing libraries (automatically installed with requirements)
 

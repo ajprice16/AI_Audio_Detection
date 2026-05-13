@@ -11,18 +11,18 @@ from aiaa import AudioFeatureExtractor
 
 
 def is_numeric(value: Any) -> bool:
-    """Helper function to check if value is numeric (int, float, or numpy numeric)"""
+    # Helper function to check if value is numeric (int,...
     return isinstance(value, (int, float, np.integer, np.floating))
 
 
 class TestAudioFeatureExtractor(unittest.TestCase):
-    """Test cases for AudioFeatureExtractor"""
+    # Test cases for AudioFeatureExtractor
 
     def setUp(self) -> None:
-        """Set up test fixtures"""
+        # Set up test fixtures
         self.extractor = AudioFeatureExtractor()
 
-        # Create sample data for testing
+        # Create sample dataset for testing
         self.sample_frequencies = [
             1.23,
             4.56,
@@ -38,14 +38,14 @@ class TestAudioFeatureExtractor(unittest.TestCase):
         self.empty_frequencies: List[float] = []
         self.small_frequencies = [1.0, 2.0]
 
-        # Create sample audio data (sine wave)
+        # Create sample audio dataset (sine wave)
         self.sample_rate = 22050
         duration = 1.0  # 1 second
         t = np.linspace(0, duration, int(self.sample_rate * duration))
         self.sample_audio = np.sin(2 * np.pi * 440 * t)  # 440 Hz sine wave
 
     def test_extract_benford_features_valid_data(self) -> None:
-        """Test Benford's Law feature extraction with valid data"""
+        # Test Benford's Law feature extraction with valid d...
         features = self.extractor.extract_benford_features(self.sample_frequencies)
 
         # Check that all expected features are present
@@ -64,17 +64,17 @@ class TestAudioFeatureExtractor(unittest.TestCase):
             self.assertFalse(np.isnan(features[feature]))
 
     def test_extract_benford_features_empty_data(self) -> None:
-        """Test Benford's Law feature extraction with empty data"""
+        # Test Benford's Law feature extraction with empty d...
         features = self.extractor.extract_benford_features(self.empty_frequencies)
         self.assertEqual(features, {})
 
     def test_extract_benford_features_insufficient_data(self) -> None:
-        """Test Benford's Law feature extraction with insufficient data"""
+        # Test Benford's Law feature extraction with insuffi...
         features = self.extractor.extract_benford_features(self.small_frequencies)
         self.assertEqual(features, {})
 
     def test_extract_spectral_features(self) -> None:
-        """Test spectral feature extraction"""
+        # Test spectral feature extraction
         features = self.extractor.extract_spectral_features(self.sample_audio, self.sample_rate)
 
         # Check that basic spectral features are present
@@ -98,7 +98,7 @@ class TestAudioFeatureExtractor(unittest.TestCase):
             self.assertIn(f"mfcc_{i}_std", features)
 
     def test_extract_temporal_features(self) -> None:
-        """Test temporal feature extraction"""
+        # Test temporal feature extraction
         features = self.extractor.extract_temporal_features(self.sample_audio, self.sample_rate)
 
         expected_features = [
@@ -117,7 +117,7 @@ class TestAudioFeatureExtractor(unittest.TestCase):
             self.assertFalse(np.isnan(features[feature]))
 
     def test_extract_compression_features(self) -> None:
-        """Test compression feature extraction"""
+        # Test compression feature extraction
         features = self.extractor.extract_compression_features(self.sample_audio, self.sample_rate)
 
         expected_features = [
@@ -133,8 +133,8 @@ class TestAudioFeatureExtractor(unittest.TestCase):
             self.assertFalse(np.isnan(features[feature]))
 
     def test_feature_extraction_error_handling(self) -> None:
-        """Test that feature extraction handles errors gracefully"""
-        # Test with invalid audio data
+        # Test that feature extraction handles errors gracef...
+        # Test with invalid audio dataset
         invalid_audio = np.array([])
 
         spectral_features = self.extractor.extract_spectral_features(invalid_audio, self.sample_rate)

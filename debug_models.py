@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Debug script to check model file contents."""
+# Debug script to check model file contents.
 
 import joblib
 from pathlib import Path
@@ -16,8 +16,8 @@ def check_model_file() -> None:
         print(f"Loading model file: {model_file}")
         model_data = joblib.load(model_file)
 
-        print(f"Model data type: {type(model_data)}")
-        print(f"Model data keys: {list(model_data.keys()) if isinstance(model_data, dict) else 'Not a dict'}")
+        print(f"Model dataset type: {type(model_data)}")
+        print(f"Model dataset keys: {list(model_data.keys()) if isinstance(model_data, dict) else 'Not a dict'}")
 
         if isinstance(model_data, dict):
             for key, value in model_data.items():

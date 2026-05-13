@@ -39,14 +39,14 @@ from aiaa import AIAudioDetector, AudioAnalyzer
 
 
 class BenchmarkRunner:
-    """Performance benchmark runner"""
+    # Performance benchmark runner
 
     def __init__(self) -> None:
         self.results: Dict[str, Dict[str, Any]] = {}
         self.temp_dir: Optional[str] = None
 
     def setup_test_data(self, num_files: int = 20) -> Path:
-        """Create test audio files for benchmarking"""
+        # Create test audio files for benchmarking
         self.temp_dir = tempfile.mkdtemp()
         temp_path = Path(self.temp_dir)
 
@@ -77,12 +77,12 @@ class BenchmarkRunner:
         return audio_dir
 
     def cleanup(self) -> None:
-        """Clean up test data"""
+        # Clean up test dataset
         if self.temp_dir:
             shutil.rmtree(self.temp_dir)
 
     def benchmark_feature_extraction(self, audio_dir: Path, num_files: int = 20) -> Dict[str, Any]:
-        """Benchmark feature extraction performance"""
+        # Benchmark feature extraction performance
         print(f"Benchmarking feature extraction with {num_files} files...")
 
         detector = AIAudioDetector(base_dir=self.temp_dir)
@@ -113,7 +113,7 @@ class BenchmarkRunner:
         return {"benchmark_results": feature_extraction_results, "features_data": all_features}
 
     def benchmark_training(self, features_data: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Benchmark model training performance"""
+        # Benchmark model training performance
         print("Benchmarking model training...")
 
         import pandas as pd
@@ -123,7 +123,7 @@ class BenchmarkRunner:
         # Check if we have enough class diversity for training
         if "is_ai" in df.columns:
             unique_labels = df["is_ai"].nunique()
-            print(f"  Found {unique_labels} unique labels in training data")
+            print(f"  Found {unique_labels} unique labels in training dataset")
 
             if unique_labels < 2:
                 print("  ⚠️  Insufficient class diversity for model training (need at least 2 classes)")
@@ -142,7 +142,7 @@ class BenchmarkRunner:
                 self.results["training"] = training_results
                 return training_results
         else:
-            print("  ⚠️  No 'is_ai' column found in training data")
+            print("  ⚠️  No 'is_ai' column found in training dataset")
             print("  Skipping model training benchmark...")
 
             # Create a dummy detector for compatibility
@@ -181,7 +181,7 @@ class BenchmarkRunner:
         return benchmark_results
 
     def benchmark_prediction(self, detector: AIAudioDetector, audio_dir: Path, num_files: int = 20) -> Dict[str, Any]:
-        """Benchmark prediction performance"""
+        # Benchmark prediction performance
         print(f"Benchmarking prediction with {num_files} files...")
 
         # Sequential prediction
@@ -218,7 +218,7 @@ class BenchmarkRunner:
 
     @profile
     def benchmark_memory_usage(self, audio_dir: Path) -> Dict[str, Any]:
-        """Benchmark memory usage during processing"""
+        # Benchmark memory usage during processing
         print("Benchmarking memory usage...")
 
         detector = AIAudioDetector(base_dir=self.temp_dir)
@@ -248,7 +248,7 @@ class BenchmarkRunner:
         return {"memory_profiling": "completed", "note": "Detailed output printed above"}
 
     def run_all_benchmarks(self, num_files: int = 20) -> Dict[str, Any]:
-        """Run all benchmarks"""
+        # Run all benchmarks
         print("=" * 60)
         print("AI AUDIO DETECTOR PERFORMANCE BENCHMARKS")
         print("=" * 60)
@@ -264,7 +264,7 @@ class BenchmarkRunner:
 
             # Create a fresh detector for prediction benchmark
             detector = AIAudioDetector(base_dir=self.temp_dir)
-            # Train it with the features if we have sufficient data
+            # Train it with the features if we have sufficient dataset
             if features:
                 import pandas as pd
 
@@ -305,14 +305,14 @@ class BenchmarkRunner:
         return self.results
 
     def save_results(self, filename: str = "benchmark-results.json") -> None:
-        """Save benchmark results to JSON file"""
+        # Save benchmark results to JSON file
         with open(filename, "w") as f:
             json.dump(self.results, f, indent=2)
         print(f"\nBenchmark results saved to: {filename}")
 
 
 def main() -> None:
-    """Run benchmarks"""
+    # Run benchmarks
     try:
         import soundfile
     except ImportError:

@@ -57,8 +57,8 @@ def process_single_prediction(args: Tuple) -> Dict[str, Any]:
         Dictionary containing prediction results.
     """
     file_path, detector = args
-    result = detector.predict_single_file(file_path)
-    return result  # type: ignore
+    output = detector.predict_single_file(file_path)
+    return output  # type: ignore
 
 
 class AIAudioDetector:
@@ -154,22 +154,30 @@ class AIAudioDetector:
             args_list = [(file_path, is_ai_directory, self.config) for file_path in audio_files]
 
             logger.debug(f"Using multiprocessing with {max_workers} workers")
-            with ProcessPoolExecutor(max_workers=max_workers) as executor:
-                with tqdm(total=len(audio_files), desc="Extracting features") as pbar:
-                    futures = {executor.submit(process_single_audio_file, args): args[0] for args in args_list}
+            try:
+                with ProcessPoolExecutor(max_workers=max_workers) as executor:
+                    with tqdm(total=len(audio_files), desc="Extracting features") as pbar:
+                        futures = {executor.submit(process_single_audio_file, args): args[0] for args in args_list}
 
-                    for future in as_completed(futures):
-                        try:
-                            features = future.result()
-                            if "error" not in features:
-                                features_list.append(features)
-                            else:
-                                logger.warning(f"Failed to extract features: {features.get('error')}")
-                        except Exception as e:
-                            file_path = futures[future]
-                            logger.error(f"Error processing {file_path}: {e}", exc_info=True)
-                        finally:
-                            pbar.update(1)
+                        for future in as_completed(futures):
+                            try:
+                                features = future.result()
+                                if "error" not in features:
+                                    features_list.append(features)
+                                else:
+                                    logger.warning(f"Failed to extract features: {features.get('error')}")
+                            except Exception as e:
+                                file_path = futures[future]
+                                logger.error(f"Error processing {file_path}: {e}", exc_info=True)
+                            finally:
+                                pbar.update(1)
+            except (OSError, NotImplementedError) as e:
+                logger.warning(f"Multiprocessing unavailable, falling back to sequential processing: {e}")
+                for file_path in tqdm(audio_files, desc="Extracting features"):
+                    features = self.analyzer.analyze_audio_file(file_path)
+                    features["is_ai"] = is_ai_directory
+                    if "error" not in features:
+                        features_list.append(features)
         else:
             # Process sequentially for small batches
             logger.debug("Using sequential processing")
@@ -184,7 +192,7 @@ class AIAudioDetector:
 
     def train_models(self, df_results: pd.DataFrame) -> Dict[str, Dict[str, Any]]:
         """
-        Train machine learning models on the provided data.
+        Train machine learning models on the provided dataset.
 
         Args:
             df_results: DataFrame containing features and labels.
@@ -212,7 +220,7 @@ class AIAudioDetector:
         X = df_results[feature_cols].fillna(0)
         y = df_results["is_ai"].astype(int)
 
-        # Split data
+        # Split dataset
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
         logger.info(f"Data split: train={len(X_train)}, test={len(X_test)}")
 
@@ -238,23 +246,29 @@ class AIAudioDetector:
 
             try:
                 model.fit(X_train_scaled, y_train)
-                y_pred = model.predict(X_test_scaled)
-                accuracy = accuracy_score(y_test, y_pred)
+                y_train_pred = model.predict(X_train_scaled)
+                y_test_pred = model.predict(X_test_scaled)
+                train_accuracy = accuracy_score(y_train, y_train_pred)
+                test_accuracy = accuracy_score(y_test, y_test_pred)
 
                 training_results[name] = {
-                    "train_accuracy": accuracy,  # Test accuracy (on held-out set)
-                    "test_accuracy": accuracy,  # Same as train_accuracy for compatibility
+                    "train_accuracy": train_accuracy,
+                    "test_accuracy": test_accuracy,
                     "model_type": type(model).__name__,
                     "feature_count": len(feature_cols),
                     "training_samples": len(X_train),
                     "test_samples": len(X_test),
                 }
 
-                logger.info(f"{name} accuracy: {accuracy:.4f}")
+                logger.info(f"{name} train accuracy: {train_accuracy:.4f}; test accuracy: {test_accuracy:.4f}")
 
             except Exception as e:
                 logger.error(f"Error training {name}: {e}", exc_info=True)
                 training_results[name] = {"error": str(e)}
+
+        successful_models = [name for name, result in training_results.items() if "error" not in result]
+        if not successful_models:
+            raise RuntimeError("No models were trained successfully")
 
         self.is_trained = True
         logger.info("Model training completed")
@@ -329,7 +343,7 @@ class AIAudioDetector:
                     value = 0.0
             feature_vector.append(value)
 
-        X = np.array(feature_vector).reshape(1, -1)
+        X = pd.DataFrame([feature_vector], columns=self.feature_columns)
         X_scaled = self.scaler.transform(X)
 
         # Get predictions from all models
@@ -418,25 +432,31 @@ class AIAudioDetector:
             max_workers = self.config["processing"]["max_workers"]
             args_list = [(file_path, self) for file_path in audio_files]
 
-            with ProcessPoolExecutor(max_workers=max_workers) as executor:
-                with tqdm(total=len(audio_files), desc="Making predictions") as pbar:
-                    futures = {executor.submit(process_single_prediction, args): args[0] for args in args_list}
+            try:
+                with ProcessPoolExecutor(max_workers=max_workers) as executor:
+                    with tqdm(total=len(audio_files), desc="Making predictions") as pbar:
+                        futures = {executor.submit(process_single_prediction, args): args[0] for args in args_list}
 
-                    for future in as_completed(futures):
-                        try:
-                            result = future.result()
-                            results.append(result)
-                        except Exception as e:
-                            file_path = futures[future]
-                            print(f"Error predicting {file_path}: {e}")
-                            results.append({"filename": file_path.name, "error": str(e)})
-                        finally:
-                            pbar.update(1)
+                        for future in as_completed(futures):
+                            try:
+                                output = future.result()
+                                results.append(output)
+                            except Exception as e:
+                                file_path = futures[future]
+                                print(f"Error predicting {file_path}: {e}")
+                                results.append({"filename": file_path.name, "error": str(e)})
+                            finally:
+                                pbar.update(1)
+            except (OSError, NotImplementedError) as e:
+                logger.warning(f"Multiprocessing unavailable, falling back to sequential prediction: {e}")
+                for file_path in tqdm(audio_files, desc="Making predictions"):
+                    output = self.predict_single_file(file_path)
+                    results.append(output)
         else:
             # Process sequentially for small batches
             for file_path in tqdm(audio_files, desc="Making predictions"):
-                result = self.predict_single_file(file_path)
-                results.append(result)
+                output = self.predict_single_file(file_path)
+                results.append(output)
 
         return results
 
@@ -518,7 +538,7 @@ class AIAudioDetector:
         self, new_data: Union[List[Dict[str, Any]], pd.DataFrame], retrain_batch_models: bool = False
     ) -> Dict[str, Any]:
         """
-        Update models with new training data using incremental learning.
+        Update models with new training dataset using incremental learning.
 
         Args:
             new_data: List of new feature dictionaries or DataFrame.
@@ -588,16 +608,16 @@ class AIAudioDetector:
 
     def show_data_balance(self, df_results: Optional[pd.DataFrame] = None) -> None:
         """
-        Display data balance information.
+        Display dataset balance information.
 
         Args:
-            df_results: DataFrame containing the data. If None, uses last training data.
+            df_results: DataFrame containing the dataset. If None, uses last training dataset.
         """
         if df_results is None:
             if not self.training_history:
-                print("No training data available to show balance.")
+                print("No training dataset available to show balance.")
                 return
-            # Use the last training data from history
+            # Use the last training dataset from history
             last_training = self.training_history[-1]
             if "data_balance" in last_training:
                 balance = last_training["data_balance"]
@@ -608,7 +628,7 @@ class AIAudioDetector:
                 print(f"Balance ratio: {balance['ratio']:.2f}")
                 return
             else:
-                print("No data balance information available.")
+                print("No dataset balance information available.")
                 return
 
         ai_count = df_results["is_ai"].sum()

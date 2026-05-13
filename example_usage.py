@@ -12,7 +12,7 @@ from aiaa import AIAudioDetector
 
 
 def example_training() -> None:
-    """Example: Train models with audio directories."""
+    # Example: Train models with audio directories....
     print("=== TRAINING EXAMPLE ===")
 
     # Initialize detector
@@ -53,7 +53,7 @@ def example_training() -> None:
 
 
 def example_prediction(detector: Optional[AIAudioDetector] = None) -> None:
-    """Example: Predict single file and batch."""
+    # Example: Predict single file and batch.
     print("\n=== PREDICTION EXAMPLE ===")
 
     if detector is None:
@@ -66,13 +66,13 @@ def example_prediction(detector: Optional[AIAudioDetector] = None) -> None:
     audio_file = "path/to/test/audio.wav"  # Replace with actual file
     if Path(audio_file).exists():
         print(f"Analyzing: {audio_file}")
-        result = detector.predict_single_file(audio_file)
+        output = detector.predict_single_file(audio_file)
 
-        if result and "error" not in result:
-            prediction = result.get("prediction", "Unknown")
+        if output and "error" not in output:
+            prediction = output.get("prediction", "Unknown")
             print(f"  Prediction: {prediction}")
-            print(f"  Confidence: {result.get('confidence', 0):.3f}")
-            print(f"  AI Probability: {result.get('ai_probability', 0):.3f}")
+            print(f"  Confidence: {output.get('confidence', 0):.3f}")
+            print(f"  AI Probability: {output.get('ai_probability', 0):.3f}")
         else:
             print("  Could not analyze file")
 
@@ -91,7 +91,7 @@ def example_prediction(detector: Optional[AIAudioDetector] = None) -> None:
 
 
 def example_adaptive_learning(detector: Optional[AIAudioDetector] = None) -> None:
-    """Example: Add new data to existing models."""
+    # Example: Add new dataset to existing models.
     print("\n=== ADAPTIVE LEARNING EXAMPLE ===")
 
     if detector is None:
@@ -100,12 +100,12 @@ def example_adaptive_learning(detector: Optional[AIAudioDetector] = None) -> Non
             print("No trained models found. Train first.")
             return
 
-    # Update with new data (demonstration)
+    # Update with new dataset (demonstration)
     new_ai_dir = "path/to/new/ai/audio"  # Replace with actual path
     new_human_dir = "path/to/new/human/audio"  # Replace with actual path
 
     if Path(new_ai_dir).exists() and Path(new_human_dir).exists():
-        print(f"Extracting features from new data...")
+        print(f"Extracting features from new dataset...")
         ai_features = detector.extract_features_from_directory(new_ai_dir, is_ai_directory=True)
         human_features = detector.extract_features_from_directory(new_human_dir, is_ai_directory=False)
 
@@ -114,13 +114,13 @@ def example_adaptive_learning(detector: Optional[AIAudioDetector] = None) -> Non
 
         if update_results:
             print("Update successful!")
-            for model_name, result in update_results.items():
+            for model_name, output in update_results.items():
                 if model_name != "models_saved":
-                    print(f"  {model_name}: {result}")
+                    print(f"  {model_name}: {output}")
 
 
 def example_spectrograms() -> None:
-    """Example: Generate spectrograms."""
+    # Example: Generate spectrograms.
     print("\n=== SPECTROGRAM EXAMPLE ===")
 
     detector = AIAudioDetector()
@@ -166,7 +166,7 @@ def example_spectrograms() -> None:
 
 
 def main() -> None:
-    """Run all examples."""
+    # Run all examples.
     print("AIAA: AI Audio Authenticity - Example Usage")
     print("=" * 50)
 

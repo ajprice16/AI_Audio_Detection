@@ -4,6 +4,11 @@ Audio analysis utilities for AIAA: AI Audio Authenticity.
 
 from typing import Dict, Any, Optional, Tuple, Union
 import numpy as np
+
+from .runtime import configure_numba_cache
+
+configure_numba_cache()
+
 import librosa
 from pathlib import Path
 import matplotlib.pyplot as plt

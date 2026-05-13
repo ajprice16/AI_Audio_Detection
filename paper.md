@@ -78,7 +78,7 @@ The package provides both programmatic and command-line interfaces:
 from aiaa import AIAudioDetector
 
 detector = AIAudioDetector()
-result = detector.predict_file("audio_file.wav")
+result = detector.predict_single_file("audio_file.wav")
 print(f"AI Generated: {result['prediction']}")
 print(f"Confidence: {result['confidence']}")
 ```

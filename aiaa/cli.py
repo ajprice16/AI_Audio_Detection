@@ -28,8 +28,8 @@ def run_interactive_mode(detector: AIAudioDetector) -> None:
     print("  batch <directory> - Predict for all files in directory")
     print("  spectrogram <file_path> - Generate spectrogram")
     print("  compare <file1> <file2> - Compare two spectrograms")
-    print("  train <ai_dir> <human_dir> - Train models with new data")
-    print("  update <ai_dir> <human_dir> - Update models with new data")
+    print("  train <ai_dir> <human_dir> - Train models with new dataset")
+    print("  update <ai_dir> <human_dir> - Update models with new dataset")
     print("  status - Show model status")
     print("  help - Show this help")
     print("  quit - Exit")
@@ -52,8 +52,8 @@ def run_interactive_mode(detector: AIAudioDetector) -> None:
                 print("  batch <directory> - Predict for all files in directory")
                 print("  spectrogram <file_path> - Generate spectrogram")
                 print("  compare <file1> <file2> - Compare two spectrograms")
-                print("  train <ai_dir> <human_dir> - Train models with new data")
-                print("  update <ai_dir> <human_dir> - Update models with new data")
+                print("  train <ai_dir> <human_dir> - Train models with new dataset")
+                print("  update <ai_dir> <human_dir> - Update models with new dataset")
                 print("  status - Show model status")
                 print("  help - Show this help")
                 print("  quit - Exit")
@@ -68,13 +68,13 @@ def run_interactive_mode(detector: AIAudioDetector) -> None:
                     print(f"File not found: {file_path}")
                     continue
 
-                result = detector.predict_single_file(file_path)
-                if "error" in result:
-                    print(f"Error: {result['error']}")
+                output = detector.predict_single_file(file_path)
+                if "error" in output:
+                    print(f"Error: {output['error']}")
                 else:
-                    print(f"File: {result['filename']}")
-                    print(f"Prediction: {result['prediction']}")
-                    print(f"Confidence: {result['confidence']:.3f}")
+                    print(f"File: {output['filename']}")
+                    print(f"Prediction: {output['prediction']}")
+                    print(f"Confidence: {output['confidence']:.3f}")
 
             elif cmd == "batch":
                 if len(command) < 2:
@@ -89,11 +89,11 @@ def run_interactive_mode(detector: AIAudioDetector) -> None:
                 results = detector.predict_batch(directory)
                 print(f"\nProcessed {len(results)} files:")
 
-                for result in results:
-                    if "error" in result:
-                        print(f"{result['filename']}: Error - {result['error']}")
+                for output in results:
+                    if "error" in output:
+                        print(f"{output['filename']}: Error - {output['error']}")
                     else:
-                        print(f"{result['filename']}: {result['prediction']} " f"(confidence: {result['confidence']:.3f})")
+                        print(f"{output['filename']}: {output['prediction']} " f"(confidence: {output['confidence']:.3f})")
 
             elif cmd == "spectrogram":
                 if len(command) < 2:
@@ -168,7 +168,10 @@ def run_interactive_mode(detector: AIAudioDetector) -> None:
                     if "error" in model_results:
                         print(f"{model_name}: Error - {model_results['error']}")
                     else:
-                        print(f"{model_name}: Accuracy = {model_results['accuracy']:.4f}")
+                        print(
+                            f"{model_name}: Train accuracy = {model_results['train_accuracy']:.4f}, "
+                            f"test accuracy = {model_results['test_accuracy']:.4f}"
+                        )
 
             elif cmd == "update":
                 if not detector.is_trained:
@@ -220,7 +223,7 @@ def run_interactive_mode(detector: AIAudioDetector) -> None:
 
 
 def main() -> None:
-    """Main entry point for the CLI."""
+    # Main entry point for the CLI.
     parser = argparse.ArgumentParser(
         description="AIAA: AI Audio Authenticity - Detect AI-generated audio using machine learning",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -248,7 +251,7 @@ Examples:
     mode_group.add_argument("--train", action="store_true", help="Train models")
     mode_group.add_argument("--predict", type=str, help="Predict single file")
     mode_group.add_argument("--batch", type=str, help="Batch prediction on directory")
-    mode_group.add_argument("--update", action="store_true", help="Update models with new data")
+    mode_group.add_argument("--update", action="store_true", help="Update models with new dataset")
     mode_group.add_argument("--interactive", action="store_true", help="Run in interactive mode")
     mode_group.add_argument("--spectrogram", type=str, help="Generate spectrogram for file")
     mode_group.add_argument("--compare", nargs=2, help="Compare two spectrograms")
@@ -316,7 +319,10 @@ Examples:
                 if "error" in model_results:
                     print(f"{model_name}: Error - {model_results['error']}")
                 else:
-                    print(f"{model_name}: Accuracy = {model_results['accuracy']:.4f}")
+                    print(
+                        f"{model_name}: Train accuracy = {model_results['train_accuracy']:.4f}, "
+                        f"test accuracy = {model_results['test_accuracy']:.4f}"
+                    )
 
         elif args.predict:
             file_path = Path(args.predict)
@@ -324,19 +330,19 @@ Examples:
                 print(f"Error: File not found: {file_path}")
                 sys.exit(1)
 
-            result = detector.predict_single_file(file_path)
-            if "error" in result:
-                print(f"Error: {result['error']}")
+            output = detector.predict_single_file(file_path)
+            if "error" in output:
+                print(f"Error: {output['error']}")
                 sys.exit(1)
 
-            print(f"File: {result['filename']}")
-            print(f"Prediction: {result['prediction']}")
-            print(f"Confidence: {result['confidence']:.3f}")
+            print(f"File: {output['filename']}")
+            print(f"Prediction: {output['prediction']}")
+            print(f"Confidence: {output['confidence']:.3f}")
 
             if args.verbose:
                 print("\nModel predictions:")
-                for model, pred in result["model_predictions"].items():
-                    conf = result["model_confidences"][model]
+                for model, pred in output["model_predictions"].items():
+                    conf = output["model_confidences"][model]
                     print(f"  {model}: {'AI' if pred else 'Human'} (confidence: {conf:.3f})")
 
         elif args.batch:
@@ -348,11 +354,11 @@ Examples:
             results: List[Dict[str, Any]] = detector.predict_batch(directory)
 
             print(f"Processed {len(results)} files:")
-            for result in results:
-                if "error" in result:
-                    print(f"{result['filename']}: Error - {result['error']}")
+            for output in results:
+                if "error" in output:
+                    print(f"{output['filename']}: Error - {output['error']}")
                 else:
-                    print(f"{result['filename']}: {result['prediction']} " f"(confidence: {result['confidence']:.3f})")
+                    print(f"{output['filename']}: {output['prediction']} " f"(confidence: {output['confidence']:.3f})")
 
             # Save results if output specified
             if args.output:

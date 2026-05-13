@@ -6,13 +6,18 @@ Validates audio files for integrity and compatibility.
 import logging
 from pathlib import Path
 from typing import Tuple, Optional, List
+
+from .runtime import configure_numba_cache
+
+configure_numba_cache()
+
 import librosa
 
 logger = logging.getLogger(__name__)
 
 
 class AudioValidationError(Exception):
-    """Exception raised for audio validation failures."""
+    # Exception raised for audio validation failures....
 
     pass
 
@@ -48,7 +53,7 @@ def validate_audio_file(file_path: Path, max_duration: float = 3600.0) -> Tuple[
 
     # Try to load minimal audio info
     try:
-        duration = librosa.get_duration(filename=str(file_path))
+        duration = librosa.get_duration(path=str(file_path))
 
         if duration is None or duration <= 0:
             return False, f"Invalid audio duration: {duration}"
